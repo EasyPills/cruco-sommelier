@@ -23,9 +23,13 @@ simple, mira el final de este documento.
 
 ## 2. Instalar el curso
 
-En la lista de instancias, pulsa **SSH** (abre una terminal en el navegador) y pega:
+En la lista de instancias, pulsa **SSH** (abre una terminal en el navegador).
+
+La imagen de Debian de Google **no trae git**, así que la primera línea lo instala.
+Sustituye `USUARIO/REPO` por los tuyos de verdad — con el texto de ejemplo falla:
 
 ```bash
+sudo apt-get update && sudo apt-get install -y git
 git clone --depth 1 https://github.com/USUARIO/REPO.git /tmp/cruco
 bash /tmp/cruco/despliegue/preparar-servidor.sh https://github.com/USUARIO/REPO.git
 ```

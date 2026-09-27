@@ -9,6 +9,8 @@ DESTINO=/var/www/cruco
 
 echo "==> Actualizando el sistema e instalando nginx y git"
 sudo apt-get update -qq
+# La imagen de Debian de Google no trae git: si se llegó aquí sin él, se instala
+# igualmente, porque el script también se usa para reinstalar sobre una VM limpia.
 sudo apt-get install -y -qq nginx git
 
 echo "==> Descargando el curso en $DESTINO"
