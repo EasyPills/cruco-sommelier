@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sommelier Profesional Método CruCo</title>
+  <!-- Design system (01) + components (03). All local: works offline. -->
+  <link rel="stylesheet" href="01-Sistema-Diseno/fonts.css?v=20260917">
+  <link rel="stylesheet" href="01-Sistema-Diseno/tokens.css?v=20260917">
+  <link rel="stylesheet" href="01-Sistema-Diseno/base.css?v=20260917">
+  <link rel="stylesheet" href="01-Sistema-Diseno/player.css?v=20260917">
+  <link rel="stylesheet" href="01-Sistema-Diseno/screens.css?v=20260917">
+  <link rel="stylesheet" href="03-Componentes/components.css?v=20260917">
+  <link rel="stylesheet" href="03-Componentes/quiz.css?v=20260917">
+  <link rel="stylesheet" href="03-Componentes/editor.css?v=20260917">
+</head>
+<body>
+  <a class="skip-link" href="#stage" data-i18n="skipToContent"></a>
+
+  <div class="app is-booting" data-sidebar="closed">
+    <header class="topbar">
+      <button class="icon-btn" id="menu-toggle" type="button" aria-controls="sidebar" aria-expanded="false" data-i18n-aria="openMenu">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+      </button>
+      <img class="topbar__logo" id="topbar-logo" src="assets/images/brand/cruco-logo-horizontal.svg" alt="CruCo. Wine Studio" width="124" height="50">
+      <div class="topbar__titles">
+        <p class="topbar__course" id="course-title"></p>
+        <p class="topbar__module" id="module-title"></p>
+      </div>
+      <div class="topbar__progress">
+        <span class="badge-complete" id="badge-complete" hidden>
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><polyline points="20 6 9 17 4 12"/></svg>
+          <span data-i18n="courseCompleted"></span>
+        </span>
+        <div class="progress" id="progress" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-i18n-aria="progressLabel">
+          <span class="progress__fill" id="progress-fill"></span>
+        </div>
+        <span class="progress__label" id="progress-label" aria-hidden="true"></span>
+      </div>
+    </header>
+
+    <aside class="sidebar" id="sidebar"></aside>
+    <div class="scrim" id="scrim" hidden></div>
+
+    <main class="stage" id="stage" tabindex="-1">
+      <div class="stage__inner" id="stage-inner"></div>
+    </main>
+
+    <nav class="navbar" data-i18n-aria="screenNav">
+      <button class="btn btn--secondary" id="nav-prev" type="button" disabled>
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><polyline points="15 18 9 12 15 6"/></svg>
+        <span class="navbar__label" data-i18n="prev"></span>
+      </button>
+      <div class="navbar__center">
+        <p class="navbar__counter" id="nav-counter"></p>
+        <p class="navbar__hint" id="nav-hint" hidden></p>
+      </div>
+      <button class="btn btn--primary" id="nav-next" type="button" disabled aria-describedby="nav-hint">
+        <span class="navbar__label" data-i18n="next"></span>
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Outside .app so they stay interactive while .app is inert. -->
+  <div id="modal-root"></div>
+  <div id="toast-root"></div>
+  <div id="live-region" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
+
+  <noscript>
+    <p style="padding:2rem;font-family:system-ui,sans-serif">Este curso necesita JavaScript. Actívalo en tu navegador para continuar.</p>
+  </noscript>
+
+  <!-- Config first; build.py injects its overrides right after it. -->
+  <script src="courseConfig.js?v=20260917"></script>
+  <script src="build-info.js"></script>
+  <script src="uiStrings.js?v=20260917"></script>
+  <script src="content/drive-assets.js?v=20260917"></script>
+
+  <!-- Core -->
+  <script src="js/utils.js?v=20260917"></script>
+  <script src="js/lmsAdapter.js?v=20260917"></script>
+  <script src="js/course.js?v=20260917"></script>
+  <script src="js/state.js?v=20260917"></script>
+
+  <!-- Components (03) -->
+  <script src="03-Componentes/js/media.js?v=20260917"></script>
+  <script src="03-Componentes/js/content.js?v=20260917"></script>
+  <script src="03-Componentes/js/disclosure.js?v=20260917"></script>
+  <script src="03-Componentes/js/layers.js?v=20260917"></script>
+  <script src="03-Componentes/js/quiz.js?v=20260917"></script>
+
+  <!-- Player (loads content/*.js listed in courseConfig.js, then boots) -->
+  <script src="js/renderer.js?v=20260917"></script>
+  <script src="js/sidebar.js?v=20260917"></script>
+  <script src="js/slide.js?v=20260917"></script>
+  <script src="js/editor.js?v=20260917"></script>
+  <script src="js/debug.js?v=20260917"></script>
+  <script src="js/player.js?v=20260917"></script>
+</body>
+</html>

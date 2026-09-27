@@ -1,0 +1,913 @@
+/* =========================================================================
+   CruCo · Player shell
+   Top bar, collapsible sidebar (Módulos / Glosario / Ayuda / Descargas),
+   stage and bottom navigation. Depends on tokens.css + base.css.
+   Desktop >= 1024px: docked sidebar. Below: off-canvas drawer.
+   ========================================================================= */
+
+.app {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+  grid-template-rows: var(--topbar-h) minmax(0, 1fr) var(--navbar-h);
+  grid-template-areas:
+    "topbar topbar"
+    "sidebar stage"
+    "sidebar navbar";
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  transition: grid-template-columns var(--dur) var(--ease);
+}
+
+.app[data-sidebar="closed"] {
+  grid-template-columns: 0 minmax(0, 1fr);
+}
+
+/* No layout animation while the player boots (avoids a sidebar slide-in). */
+.app.is-booting,
+.app.is-booting * {
+  transition: none !important;
+}
+
+/* ---- Top bar ------------------------------------------------------------ */
+.topbar {
+  grid-area: topbar;
+  z-index: var(--z-topbar);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: 0 var(--sp-4) 0 var(--sp-2);
+  background: var(--c-surface);
+  border-bottom: 1px solid var(--c-line);
+}
+
+.topbar__logo {
+  flex: none;
+  width: auto;
+  height: 34px;
+  margin-right: var(--sp-2);
+}
+
+.topbar__titles {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  flex: 1;
+}
+
+.topbar__course,
+.topbar__module {
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.topbar__course {
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semibold);
+  line-height: 1.2;
+}
+
+.topbar__module {
+  font-size: var(--fs-xs);
+  color: var(--c-ink-muted);
+}
+
+.topbar__progress {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  flex: none;
+}
+
+.progress {
+  position: relative;
+  width: clamp(80px, 16vw, 200px);
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--c-surface-alt);
+  overflow: hidden;
+}
+
+.progress__fill {
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 0;
+  border-radius: inherit;
+  background: var(--c-accent);
+  transition: width var(--dur-slow) var(--ease);
+}
+
+.progress__label {
+  min-width: 3.2em;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+.badge-complete {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  padding: 2px var(--sp-3);
+  border-radius: var(--radius-pill);
+  background: var(--c-success-soft);
+  color: var(--c-success);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+}
+
+/* ---- Sidebar -------------------------------------------------------------- */
+.sidebar {
+  grid-area: sidebar;
+  z-index: var(--z-sidebar);
+  display: flex;
+  flex-direction: column;
+  width: var(--sidebar-w);
+  min-height: 0;
+  background: var(--c-surface);
+  border-right: 1px solid var(--c-line);
+  transition: transform var(--dur) var(--ease), visibility 0s linear 0s;
+}
+
+.app[data-sidebar="closed"] .sidebar {
+  visibility: hidden;
+  transform: translateX(-100%);
+  transition: transform var(--dur) var(--ease), visibility 0s linear var(--dur);
+}
+
+.sidebar__head {
+  display: none;               /* shown in drawer mode */
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--sp-2) var(--sp-2) var(--sp-2) var(--sp-4);
+  border-bottom: 1px solid var(--c-line);
+}
+
+.sidebar__head h2 {
+  margin: 0;
+  font-size: var(--fs-md);
+}
+
+/* Tab bar at the BOTTOM of the menu (see the header note). */
+.sidebar__tabs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  flex: none;
+  padding: 0 var(--sp-2) var(--sp-2);
+  border-top: 1px solid var(--c-line);
+  background: var(--c-surface);
+}
+
+.sidebar__tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-height: 56px;
+  padding: var(--sp-2) var(--sp-1);
+  border: 0;
+  border-top: 3px solid transparent;
+  background: none;
+  color: var(--c-ink-muted);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-medium);
+}
+
+.sidebar__tab svg {
+  width: 20px;
+  height: 20px;
+}
+
+.sidebar__tab:hover {
+  color: var(--c-ink);
+}
+
+.sidebar__tab[aria-selected="true"] {
+  border-top-color: var(--c-accent);
+  color: var(--c-accent);
+  font-weight: var(--fw-semibold);
+}
+
+.sidebar__panel {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: var(--sp-4);
+  overscroll-behavior: contain;
+}
+
+.sidebar__panel h3 {
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.02em;
+}
+
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-sidebar) - 1);
+  background: rgb(15 26 48 / 0.45);
+}
+
+/* ---- Table of contents -------------------------------------------------- */
+.toc__group {
+  display: flex;
+  gap: var(--sp-2);
+  margin: var(--sp-5) 0 var(--sp-2);
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--c-vino);
+}
+
+.toc__group:first-child {
+  margin-top: 0;
+}
+
+.toc__point {
+  display: flex;
+  gap: var(--sp-2);
+  margin: var(--sp-4) 0 var(--sp-2);
+  font-family: var(--font-body);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-snug);
+  color: var(--c-ink);
+}
+
+.toc__point-num,
+.toc__group-num {
+  color: var(--c-dorado);
+}
+
+/* A point with a single lesson of its own name is one row: the badge shows the
+   point number instead of the lesson number (client 2026-09-22). */
+.toc__module-num--point {
+  background: none;
+  color: var(--c-dorado);
+  font-size: var(--fs-sm);
+}
+
+.toc__group + .toc__point {
+  margin-top: var(--sp-2);
+}
+
+/* The lesson row is the link now: it opens the lesson at its first screen. */
+.toc__module-head[data-status="locked"] {
+  opacity: 0.55;
+}
+
+.toc__module-head[aria-current="step"] {
+  background: var(--c-accent-soft);
+}
+
+.toc__module-head .toc__status {
+  flex: none;
+}
+
+.toc__module + .toc__module {
+  margin-top: var(--sp-2);
+}
+
+.toc__module-head {
+  display: grid;
+  grid-template-columns: auto 1fr auto auto;
+  align-items: center;
+  gap: var(--sp-3);
+  width: 100%;
+  padding: var(--sp-3);
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--c-surface-alt);
+  text-align: left;
+}
+
+.toc__module-num {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: var(--radius-pill);
+  background: var(--c-surface);
+  color: var(--c-accent);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.toc__module[data-done="true"] .toc__module-num {
+  background: var(--c-success);
+  color: #fff;
+}
+
+.toc__module-title {
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-snug);
+}
+
+.toc__module-count {
+  font-size: var(--fs-xs);
+  color: var(--c-ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.toc__module-head .chev {
+  width: 18px;
+  height: 18px;
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.toc__module-head[aria-expanded="false"] .chev {
+  transform: rotate(-90deg);
+}
+
+.toc__screens {
+  margin: var(--sp-1) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.toc__screen {
+  display: grid;
+  grid-template-columns: 20px auto 1fr;
+  align-items: start;
+  gap: var(--sp-2);
+  width: 100%;
+  padding: var(--sp-2) var(--sp-3);
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: none;
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+  text-align: left;
+}
+
+.toc__screen:hover:not(:disabled) {
+  background: var(--c-surface-alt);
+}
+
+.toc__screen[aria-current="step"] {
+  background: var(--c-accent-soft);
+  color: var(--c-accent-strong);
+  font-weight: var(--fw-semibold);
+}
+
+.toc__status {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  margin-top: 1px;
+}
+
+.toc__status svg {
+  width: 16px;
+  height: 16px;
+}
+
+.toc__screen[data-status="done"] .toc__status { color: var(--c-success); }
+.toc__screen[data-status="pending"] .toc__status { color: var(--c-warning); }
+.toc__screen[data-status="new"] .toc__status { color: var(--c-line-strong); }
+
+.toc__num {
+  color: var(--c-ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Glossary ------------------------------------------------------------ */
+.search {
+  position: relative;
+  margin-bottom: var(--sp-3);
+}
+
+.search svg {
+  position: absolute;
+  top: 50%;
+  left: var(--sp-3);
+  width: 18px;
+  height: 18px;
+  color: var(--c-ink-muted);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.search input {
+  width: 100%;
+  min-height: 44px;
+  padding: var(--sp-2) var(--sp-3) var(--sp-2) calc(var(--sp-3) * 2 + 18px);
+  border: 1.5px solid var(--c-line-strong);
+  border-radius: var(--radius-pill);
+  background: var(--c-surface);
+}
+
+.search input:focus-visible {
+  border-color: var(--c-focus);
+  outline-offset: 1px;
+}
+
+.glossary__count {
+  margin: 0 0 var(--sp-3);
+  font-size: var(--fs-xs);
+  color: var(--c-ink-muted);
+}
+
+.glossary__list {
+  margin: 0;
+}
+
+.glossary__item {
+  padding: var(--sp-3) 0;
+  border-bottom: 1px solid var(--c-line);
+}
+
+.glossary__item dt {
+  font-family: var(--font-display);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-semibold);
+}
+
+.glossary__item dd {
+  margin: var(--sp-1) 0 0;
+  font-size: var(--fs-sm);
+  color: var(--c-ink-muted);
+}
+
+.glossary__item mark {
+  background: var(--c-warning-soft);
+  color: inherit;
+  border-radius: 2px;
+}
+
+.link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  margin-top: var(--sp-1);
+  padding: var(--sp-1) 0;
+  border: 0;
+  background: none;
+  color: var(--c-accent);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.empty-note {
+  padding: var(--sp-4);
+  border-radius: var(--radius-md);
+  background: var(--c-surface-alt);
+  color: var(--c-ink-muted);
+  font-size: var(--fs-sm);
+  text-align: center;
+}
+
+/* ---- Help & downloads ---------------------------------------------------- */
+.help-section + .help-section {
+  margin-top: var(--sp-5);
+}
+
+.help-section p,
+.help-section li {
+  font-size: var(--fs-sm);
+}
+
+.help-section ul {
+  padding-left: 1.2em;
+}
+
+.contact-list {
+  margin: 0;
+  font-size: var(--fs-sm);
+}
+
+.contact-list dt {
+  font-weight: var(--fw-semibold);
+}
+
+.contact-list dd {
+  margin: 0 0 var(--sp-2);
+}
+
+.download {
+  display: grid;
+  grid-template-columns: 40px 1fr;
+  gap: var(--sp-3);
+  padding: var(--sp-3);
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-md);
+  color: var(--c-ink);
+  text-decoration: none;
+}
+
+.download + .download {
+  margin-top: var(--sp-2);
+}
+
+.download:hover {
+  border-color: var(--c-accent);
+  color: var(--c-ink);
+}
+
+.download__icon {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: var(--c-accent-soft);
+  color: var(--c-accent);
+}
+
+.download__icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.download__title {
+  display: block;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-snug);
+}
+
+.download__meta {
+  display: block;
+  font-size: var(--fs-xs);
+  color: var(--c-ink-muted);
+}
+
+/* ---- Stage ----------------------------------------------------------------- */
+.stage {
+  grid-area: stage;
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+.stage:focus {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .stage { scroll-behavior: auto; }
+}
+
+.stage__inner {
+  /* --stage-pad is the side padding; .callout--band bleeds out by exactly
+     this much so the gold box reaches the edge of the screen. */
+  --stage-pad: clamp(var(--sp-4), 4vw, var(--sp-7));
+  min-height: 100%;
+  padding: var(--sp-6) var(--stage-pad) var(--sp-7);
+}
+
+/* ---- Bottom navigation -------------------------------------------------- */
+.navbar {
+  grid-area: navbar;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding: 0 clamp(var(--sp-3), 3vw, var(--sp-6));
+  background: var(--c-surface);
+  border-top: 1px solid var(--c-line);
+}
+
+.navbar__center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  min-width: 0;
+}
+
+.navbar__counter {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--c-ink-muted);
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+/* Says why "Siguiente" is disabled (pending knowledge check). */
+.navbar__hint {
+  margin: 0;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  color: var(--c-warning);
+  text-align: center;
+}
+
+.navbar__counter strong {
+  color: var(--c-ink);
+}
+
+/* ---- Toast ----------------------------------------------------------------- */
+.toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--navbar-h) + var(--sp-4));
+  z-index: var(--z-toast);
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  max-width: min(92vw, 520px);
+  padding: var(--sp-3) var(--sp-5);
+  border-radius: var(--radius-lg);
+  background: var(--c-ink);
+  color: #fff;
+  box-shadow: var(--shadow-3);
+  font-size: var(--fs-sm);
+  transform: translateX(-50%);
+  animation: toast-in var(--dur-slow) var(--ease);
+}
+
+.toast svg {
+  width: 22px;
+  height: 22px;
+  flex: none;
+  color: #9bd3a8;
+}
+
+@keyframes toast-in {
+  from { opacity: 0; transform: translate(-50%, 12px); }
+  to { opacity: 1; transform: translate(-50%, 0); }
+}
+
+/* ---- Drawer mode (tablet / mobile) ----------------------------------------- */
+@media (max-width: 1023.98px) {
+  .app,
+  .app[data-sidebar="closed"] {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "topbar"
+      "stage"
+      "navbar";
+  }
+
+  .sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: var(--z-drawer);
+    width: min(88vw, 380px);
+    box-shadow: var(--shadow-3);
+  }
+
+  .scrim {
+    z-index: var(--z-scrim);
+  }
+
+  .sidebar__head {
+    display: flex;
+  }
+}
+
+@media (max-width: 599.98px) {
+  :root {
+    --topbar-h: 56px;
+    --navbar-h: 64px;
+  }
+
+  /* The bar has to hold the reason "Siguiente" is waiting (2026-09-21), and on
+     a phone that runs to two lines: let the row grow instead of cutting it. */
+  .app {
+    grid-template-rows: var(--topbar-h) minmax(0, 1fr) minmax(var(--navbar-h), auto);
+  }
+
+  .navbar {
+    padding-block: var(--sp-2);
+  }
+
+  .navbar__hint {
+    font-size: 0.9375rem;      /* 15px: the reason, not a headline */
+    line-height: var(--lh-snug);
+  }
+
+  .topbar__logo {
+    display: none;             /* course title keeps the brand present */
+  }
+
+  .topbar__course {
+    font-size: var(--fs-sm);
+  }
+
+  .progress {
+    width: 64px;
+  }
+
+  /* Phones: the course title needs the room more than the completion chip,
+     which was squeezing it down to "Somm...". */
+  #badge-complete {
+    display: none;
+  }
+
+  .navbar .btn {
+    padding-inline: var(--sp-4);
+  }
+
+  .navbar__label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+  }
+}
+
+/* ---- Storyline stage: fixed 16:9 slide scaled to the window --------------
+   js/slide.js measures the stage and sets --slide-scale; it switches the
+   mode off (data-slide="off") on narrow/short windows or when the slide
+   would get too small to read, and the responsive layout takes over. */
+.app[data-slide="on"] .stage {
+  position: relative;            /* the slide is centred absolutely: its
+                                    unscaled box must not size the layout */
+  padding: 0;
+  overflow: hidden;
+  background: var(--c-surface-alt);
+}
+
+.app[data-slide="on"] .stage__inner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: var(--slide-w, 1120px);
+  height: var(--slide-h, 630px);
+  --stage-pad: 52px;
+  min-height: 0;
+  padding: 44px var(--stage-pad);  /* fixed px: scales with the slide */
+  overflow-y: auto;
+  overflow-x: hidden;
+  border-radius: var(--radius-lg);
+  background: var(--c-surface);
+  box-shadow: var(--shadow-2);
+  transform: translate(-50%, -50%) scale(var(--slide-scale, 1));
+  transform-origin: center center;
+}
+
+/* A screen that paints its own background (the CruCo ground, or a photo) is
+   the slide: the stage gives up its white surface and its padding, instead of
+   framing the screen and padding the content twice. */
+.app[data-slide="on"] .stage__inner:has(.screen--brand-bg),
+.app[data-slide="on"] .stage__inner:has(.screen--bg-light) {
+  padding: 0;
+  background: none;
+}
+
+.app[data-slide="on"] .screen--brand-bg,
+.app[data-slide="on"] .screen--bg-light {
+  min-height: 100%;
+  padding: var(--slide-pad-block) var(--stage-pad);
+}
+
+/* The client asked for 4pt more type (2026-09-21) on a slide that cannot grow,
+   so the rhythm gives way before the type does: tighter margins, same text. */
+.app[data-slide="on"] .stage__inner {
+  --slide-pad-block: 28px;
+  /* one step down on the scale the components pad themselves with, so the
+     bigger type keeps its measure inside a slide of fixed height */
+  --sp-5: 1.25rem;
+  --sp-6: 1.75rem;
+  --sp-7: 2.5rem;
+  padding-block: var(--slide-pad-block);
+}
+
+.app[data-slide="on"] .screen__body,
+.app[data-slide="on"] .screen__main,
+.app[data-slide="on"] .screen__aside {
+  gap: var(--sp-4);
+}
+
+.app[data-slide="on"] .screen__header:not(.screen__header--bare) {
+  margin-bottom: var(--sp-5);
+}
+
+/* The check box is the tallest thing the course puts on a slide. */
+.app[data-slide="on"] .quiz {
+  padding: var(--sp-5);
+}
+
+.app[data-slide="on"] .quiz__head {
+  margin-bottom: var(--sp-4);
+}
+
+.app[data-slide="on"] .callout--objective {
+  padding-block: var(--sp-5);
+}
+
+/* A media column that also carries text (ML03 screen 5: photo + pull quote)
+   cannot give the photo the whole height. */
+.app[data-slide="on"] .screen__aside:has(> * + *) .figure--cover img,
+.app[data-slide="on"] .screen__aside:has(> * + *) .img-ph {
+  max-height: 240px;
+}
+
+/* The presenter's circle opens the covers; on a slide of fixed height it can
+   be a little smaller and leave the words the room. */
+.app[data-slide="on"] .figure--avatar img {
+  width: 64px;
+}
+
+/* ---- "there is more below" -----------------------------------------------
+   A slide cannot grow, and since 2026-09-21 the learner cannot advance until
+   the check is answered: anything out of sight has to announce itself. */
+.slide-more {
+  position: sticky;
+  bottom: 10px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  /* to the right, clear of centred content; the negative top margin keeps it
+     from adding height to a slide that is already too short */
+  margin: -44px 0 0 auto;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--c-azul-profundo);
+  color: var(--c-blanco);
+  box-shadow: var(--shadow-2);
+  animation: slide-more-nudge 1.8s var(--ease) infinite;
+}
+
+.slide-more svg {
+  width: 22px;
+  height: 22px;
+}
+
+.slide-more:hover {
+  background: var(--c-azul);
+}
+
+.stage__inner[data-scroll="end"] .slide-more,
+.stage__inner:not([data-scroll]) .slide-more {
+  display: none;
+}
+
+@keyframes slide-more-nudge {
+  0%, 70%, 100% { transform: translateY(0); }
+  85% { transform: translateY(4px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .slide-more { animation: none; }
+}
+
+/* The cover screens paint their own background: no double frame. */
+.app[data-slide="on"] .stage__inner:has(.screen--cover) {
+  padding: 0;
+  overflow: hidden;
+  background: none;
+  box-shadow: none;
+}
+
+.app[data-slide="on"] .screen--cover {
+  /* the responsive min-height (640px) is taller than the slide itself */
+  min-height: 100%;
+  border-radius: var(--radius-lg);
+}
+
+/* ---- The table of contents shows the whole course (client 2026-09-23) -----
+   What is produced is a link; what is still to come is listed, dimmed, and
+   indented so the hierarchy of the approved map reads at a glance. */
+.toc__point--l2 {
+  margin-left: var(--sp-4);
+  font-size: var(--fs-xs);
+}
+
+.toc__soon {
+  display: flex;
+  gap: var(--sp-2);
+  margin: var(--sp-1) 0 var(--sp-1) var(--sp-4);
+  font-size: var(--fs-sm);
+  line-height: var(--lh-snug);
+  color: var(--c-ink-muted);
+  opacity: 0.75;
+}
+
+.toc__soon--l2 {
+  margin-left: var(--sp-6);
+  font-size: var(--fs-xs);
+}
+
+.toc__soon--l3 {
+  margin-left: var(--sp-8);
+  font-size: var(--fs-xs);
+}
+
+.toc__soon-num {
+  flex: none;
+  color: var(--c-dorado);
+}

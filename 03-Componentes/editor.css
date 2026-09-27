@@ -1,0 +1,229 @@
+/* =========================================================================
+   editor.css — author mode only (js/editor.js)
+   -------------------------------------------------------------------------
+   Nothing here applies unless the app is in editor mode
+   (.app[data-editor="on"]), so the learner build is untouched.
+   ========================================================================= */
+
+/* ---- Edit affordance on every image / video / audio --------------------- */
+.editable {
+  position: relative;
+  display: block;
+}
+
+.app[data-editor="on"] .editable {
+  outline: 2px dashed var(--c-line-strong);
+  outline-offset: 3px;
+  border-radius: var(--radius-sm);
+}
+
+.app[data-editor="on"] .editable[data-edited="true"] {
+  outline-color: var(--c-dorado);
+  outline-style: solid;
+}
+
+.editable__tools {
+  position: absolute;
+  top: var(--sp-2);
+  right: var(--sp-2);
+  z-index: 3;
+  display: flex;
+  gap: var(--sp-1);
+}
+
+.editable__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  min-height: 34px;
+  padding: 0 var(--sp-3);
+  border: 1px solid var(--c-accent);
+  border-radius: var(--radius-pill);
+  background: var(--c-surface);
+  color: var(--c-accent);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  box-shadow: var(--shadow-1);
+  opacity: 0.94;
+}
+
+.editable__btn:hover {
+  background: var(--c-accent);
+  color: var(--c-accent-ink);
+}
+
+.editable__btn svg {
+  width: 15px;
+  height: 15px;
+}
+
+.editable__badge {
+  position: absolute;
+  top: var(--sp-2);
+  left: var(--sp-2);
+  z-index: 3;
+  padding: 2px var(--sp-2);
+  border-radius: var(--radius-pill);
+  background: var(--c-dorado);
+  color: var(--c-azul);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+}
+
+/* ---- Floating badge / panel opener ------------------------------------- */
+.editor-badge {
+  position: fixed;
+  left: var(--sp-4);
+  bottom: calc(var(--navbar-h) + var(--sp-4));
+  z-index: var(--z-editor);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-height: 44px;
+  padding: 0 var(--sp-4);
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--c-azul);
+  color: var(--c-blanco);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  box-shadow: var(--shadow-2);
+}
+
+.editor-badge svg {
+  width: 16px;
+  height: 16px;
+  color: var(--c-dorado);
+}
+
+/* ---- Dialog form -------------------------------------------------------- */
+.editor-form__row + .editor-form__row {
+  margin-top: var(--sp-4);
+}
+
+.editor-form label {
+  display: block;
+  margin-bottom: var(--sp-1);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+}
+
+.editor-form__input {
+  width: 100%;
+  min-height: 44px;
+  padding: var(--sp-2) var(--sp-3);
+  border: 1.5px solid var(--c-line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--c-surface);
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+}
+
+textarea.editor-form__input {
+  font-family: var(--font-body);
+  resize: vertical;
+}
+
+.editor-form__help {
+  margin: var(--sp-1) 0 0;
+  font-size: var(--fs-xs);
+  color: var(--c-ink-muted);
+}
+
+/* ---- Changes panel ------------------------------------------------------ */
+.editor-changes {
+  margin: 0 0 var(--sp-4);
+  font-size: var(--fs-sm);
+}
+
+.editor-changes dt {
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  color: var(--c-accent);
+}
+
+.editor-changes dd {
+  margin: 0 0 var(--sp-3);
+  padding-left: var(--sp-3);
+  border-left: 2px solid var(--c-line);
+}
+
+.editor-changes dd p {
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  word-break: break-word;
+}
+
+.editor-files {
+  margin: 0 0 var(--sp-4);
+  padding-left: 1.2em;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+}
+
+.editor-export {
+  width: 100%;
+  padding: var(--sp-3);
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--c-surface-alt);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  resize: vertical;
+}
+
+/* ---- Delete & restore --------------------------------------------------- */
+.editable__btn--danger {
+  border-color: var(--c-error);
+  color: var(--c-error);
+}
+
+.editable__btn--danger:hover {
+  background: var(--c-error);
+  color: var(--c-blanco);
+}
+
+/* Left where a deleted piece was, so the author can bring it back. */
+.editable-deleted {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px dashed var(--c-line-strong);
+  border-radius: var(--radius-md);
+  background: var(--c-surface-alt);
+}
+
+.editable-deleted__label {
+  margin: 0;
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--c-ink-muted);
+}
+
+.editable-deleted .btn {
+  min-height: 36px;
+  font-size: var(--fs-xs);
+}
+
+.screen__bg-deleted {
+  position: absolute;
+  right: var(--sp-4);
+  bottom: var(--sp-4);
+  left: var(--sp-4);
+  z-index: 2;
+}
+
+.editor-changes__deleted {
+  font-weight: var(--fw-bold);
+  color: var(--c-error);
+}
+
+/* In slide mode the toolbars sit inside the scaled slide: keep them legible. */
+.app[data-slide="on"] .editable__btn {
+  font-size: 12px;
+}

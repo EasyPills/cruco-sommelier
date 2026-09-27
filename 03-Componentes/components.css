@@ -1,0 +1,2050 @@
+/* =========================================================================
+   CruCo · Interactive components (media, disclosure, layers)
+   Quiz styles live in quiz.css. Depends on 01-Sistema-Diseno tokens.
+   ========================================================================= */
+
+/* ---- Callout ---------------------------------------------------------------- */
+.callout {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: var(--sp-3);
+  padding: var(--sp-4) var(--sp-5);
+  border-left: 4px solid var(--c-accent);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  background: var(--c-accent-soft);
+}
+
+.callout > svg {
+  width: 22px;
+  height: 22px;
+  margin-top: 2px;
+  color: var(--c-accent);
+}
+
+.callout__title {
+  margin: 0 0 var(--sp-1);
+  font-family: var(--font-body);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+}
+
+.callout--info { border-color: var(--c-info); background: var(--c-info-soft); }
+.callout--info > svg { color: var(--c-info); }
+
+.callout--quote {
+  grid-template-columns: 1fr;
+  border-left-color: var(--c-ink);
+  background: var(--c-surface);
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-style: italic;
+}
+
+.callout--quote > svg { display: none; }
+
+/* ---- Figure / image --------------------------------------------------------- */
+.figure {
+  margin: 0;
+}
+
+.figure img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-md);
+  background: var(--c-surface-alt);
+}
+
+.figure figcaption {
+  margin-top: var(--sp-2);
+  font-size: var(--fs-xs);
+  color: var(--c-ink-muted);
+}
+
+.img-ph {
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: var(--sp-2);
+  min-height: 220px;
+  aspect-ratio: 4 / 3;
+  padding: var(--sp-5);
+  border: 2px dashed var(--c-line-strong);
+  border-radius: var(--radius-md);
+  background: var(--c-image-ph);
+  color: var(--c-image-ph-ink);
+  text-align: center;
+}
+
+.img-ph svg {
+  width: 36px;
+  height: 36px;
+  opacity: 0.8;
+}
+
+.img-ph__label {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.img-ph__desc {
+  max-width: 42ch;
+  margin: 0;
+  font-size: var(--fs-sm);
+}
+
+/* ---- Video -------------------------------------------------------------------- */
+.video {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--c-azul-profundo);
+}
+
+.video video,
+.video iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* Spec: static pink placeholder (#FFC0CB) until a source is configured. */
+.video-ph {
+  position: relative;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: var(--sp-3);
+  aspect-ratio: 16 / 9;
+  padding: var(--sp-5);
+  border: 2px dashed var(--c-video-ph-line);
+  border-radius: var(--radius-md);
+  background:
+    repeating-linear-gradient(135deg, rgb(255 255 255 / 0.22) 0 14px, transparent 14px 28px),
+    var(--c-video-ph);
+  color: var(--c-video-ph-ink);
+  text-align: center;
+}
+
+.video-ph__icon {
+  display: grid;
+  place-items: center;
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-pill);
+  background: rgb(255 255 255 / 0.7);
+}
+
+.video-ph__icon svg {
+  width: 30px;
+  height: 30px;
+}
+
+.video-ph__label {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.video-ph__title {
+  max-width: 36ch;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-snug);
+}
+
+/* A hairline with air on both sides, to close a part of a screen. */
+.divider {
+  width: 100%;
+  height: 0;
+  margin: var(--sp-4) 0;
+  border: 0;
+  border-top: 1px solid var(--c-line);
+}
+
+/* An instruction line under the text it belongs to. */
+.prose--hint {
+  margin-top: calc(-1 * var(--sp-2));
+  font-size: var(--fs-sm);
+  color: var(--c-ink-muted);
+}
+
+/* A moving illustration: no frame, no controls, and never taller than what the
+   slide has left once the narration bar is in place. */
+.figure--anim {
+  margin: 0;
+}
+
+.video-anim {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: 460px;
+  margin-inline: auto;
+  border-radius: var(--radius-md);
+  background: var(--c-blanco);
+}
+
+/* The clip can be asked to take more room, so the drawings read (client
+   2026-09-23, the roles carousel). It still has to leave the slide room for
+   the narration bar. */
+.video-anim--large {
+  width: 100%;
+  max-height: 496px;               /* what the slide leaves under the VO bar */
+}
+
+@media (max-width: 899.98px) {
+  .video-anim { max-height: 52vh; }
+  .video-anim--large { max-height: 56vh; }
+}
+
+/* ---- Audio player (VO) --------------------------------------------------------- */
+.audio {
+  max-width: 860px;
+  padding: var(--sp-2) var(--sp-3);
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-lg);
+  background: var(--c-surface);
+}
+
+.audio__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+}
+
+.audio__play {
+  flex: none;
+  background: var(--c-accent);
+  color: #fff;
+}
+
+.audio__play:hover:not(:disabled) {
+  background: var(--c-accent-strong);
+}
+
+.audio__seek {
+  flex: 1;
+  min-width: 60px;
+  accent-color: var(--c-accent);
+}
+
+.audio__time {
+  flex: none;
+  font-size: var(--fs-xs);
+  color: var(--c-ink-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.audio__rate {
+  flex: none;
+  min-width: 52px;
+  padding: var(--sp-1) var(--sp-2);
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-pill);
+  background: none;
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+}
+
+.audio__transcript-btn {
+  flex: none;
+  font-size: var(--fs-xs);
+}
+
+.audio__transcript {
+  margin-top: var(--sp-3);
+  padding: var(--sp-3) var(--sp-2) var(--sp-2);
+  border-top: 1px solid var(--c-line);
+  font-size: var(--fs-sm);
+  color: var(--c-ink-muted);
+}
+
+/* Missing file: dim only the dead controls; the transcript stays usable. */
+.audio[data-state="error"] .audio__bar > :disabled,
+.audio[data-state="error"] .audio__time {
+  opacity: 0.45;
+}
+
+.audio__error {
+  font-size: var(--fs-xs);
+  color: var(--c-ink-muted);
+}
+
+/* The icon only shows on a phone; on a laptop the label carries the meaning. */
+.audio__transcript-btn .icon {
+  display: none;
+}
+
+@media (max-width: 599.98px) {
+  /* Client V2 2026-09-15: keep the speed control on a phone and shrink the
+     transcript button to its icon — "Ver transcripción" ate the whole bar. */
+  .audio__bar {
+    gap: var(--sp-2);
+  }
+
+  .audio__rate {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 46px;
+    height: 40px;
+  }
+
+  .audio__transcript-btn {
+    display: inline-grid;
+    place-items: center;
+    width: 40px;
+    min-width: 40px;
+    height: 40px;
+    min-height: 40px;
+    padding: 0;
+    border: 1px solid var(--c-line-strong);
+    border-radius: var(--radius-pill);
+  }
+
+  .audio__transcript-btn .icon {
+    display: block;
+    width: 20px;
+    height: 20px;
+  }
+
+  /* Hidden to the eye, still the button's name for a screen reader. */
+  .audio__transcript-btn .audio__transcript-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
+
+/* ---- Accordion -------------------------------------------------------------- */
+.accordion {
+  border-top: 1px solid var(--c-line);
+}
+
+.accordion__item {
+  border-bottom: 1px solid var(--c-line);
+}
+
+.accordion__heading {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--fs-md);
+}
+
+.accordion__trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  width: 100%;
+  min-height: 56px;
+  padding: var(--sp-3) var(--sp-2);
+  border: 0;
+  background: none;
+  font-weight: var(--fw-semibold);
+  text-align: left;
+}
+
+.accordion__trigger:hover {
+  color: var(--c-accent);
+}
+
+.accordion__trigger svg {
+  width: 20px;
+  height: 20px;
+  flex: none;
+  transition: transform var(--dur) var(--ease);
+}
+
+.accordion__trigger[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+
+.accordion__panel {
+  padding: 0 var(--sp-2) var(--sp-4);
+}
+
+/* ---- Tabs ------------------------------------------------------------------- */
+.tabs__list {
+  display: flex;
+  gap: var(--sp-1);
+  overflow-x: auto;
+  border-bottom: 1px solid var(--c-line);
+  scrollbar-width: thin;
+}
+
+.tabs__tab {
+  flex: none;
+  min-height: 48px;
+  padding: var(--sp-2) var(--sp-4);
+  border: 0;
+  border-bottom: 3px solid transparent;
+  background: none;
+  color: var(--c-ink-muted);
+  font-weight: var(--fw-semibold);
+  white-space: nowrap;
+}
+
+.tabs__tab:hover {
+  color: var(--c-ink);
+}
+
+.tabs__tab[aria-selected="true"] {
+  border-bottom-color: var(--c-accent);
+  color: var(--c-accent);
+}
+
+.tabs__panel {
+  padding: var(--sp-5) 0 0;
+}
+
+.tabs__panel .figure {
+  margin-top: var(--sp-4);
+}
+
+/* ---- Cards grid -------------------------------------------------------------- */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: var(--sp-4);
+}
+
+.cards[data-columns="2"] { grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+
+/* In a text column beside a media one, two per row still read (ML01 screen 2
+   next to the navigation video). */
+.screen__main .cards[data-columns="2"],
+.screen__aside .cards[data-columns="2"] {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+@media (max-width: 899.98px) {
+  .screen__main .cards[data-columns="2"],
+  .screen__aside .cards[data-columns="2"] {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  }
+}
+
+/* Client 2026-09-21, ML03 screen 3: a white strip that travels left to right
+   uncovering the images. No card, no border, no frame — nothing that says
+   where one image ends and the next begins. */
+.cards--strip {
+  align-items: end;
+  background: var(--c-blanco);
+}
+
+.cards--strip .card {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  text-align: center;
+}
+
+.cards--strip .card .figure img,
+.cards--strip .card img {
+  aspect-ratio: auto;
+  object-fit: contain;
+  background: none;
+  border-radius: 0;
+}
+
+.cards--strip .card__title {
+  margin-top: var(--sp-2);
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-snug);
+  color: var(--c-ink-muted);
+}
+
+/* A strip: five items across, as small as they need to be (ML03 screen 3). */
+.cards[data-columns="5"] {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--sp-3);
+}
+
+@media (max-width: 899.98px) {
+  .cards[data-columns="5"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  padding: var(--sp-5);
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-lg);
+  background: var(--c-surface);
+  box-shadow: var(--shadow-1);
+}
+
+/* ---- Expandable cards (ML03 screen 4) -------------------------------------
+   Image, the title written over it, and a "+" that opens the description. */
+.cards--expandable .card {
+  padding: 0;
+  overflow: hidden;
+}
+
+.card--expandable .card__head {
+  position: relative;
+}
+
+.card--expandable .figure {
+  margin: 0;
+}
+
+/* more specific than the generic `.card .figure img` 16:10 above */
+.cards--expandable .card--expandable .figure img {
+  display: block;
+  width: 100%;
+  /* client 2026-09-21: taller, so the photograph reads. Square is what the
+     slide can hold once the instruction line is on it (2026-09-22). */
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+.card--expandable .card__toggle {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  width: 100%;
+  padding: var(--sp-6) var(--sp-4) var(--sp-3);
+  border: 0;
+  /* the title has to read over any photo */
+  background: linear-gradient(to top, rgb(15 26 48 / 0.92) 25%, rgb(15 26 48 / 0));
+  color: var(--c-blanco);
+  text-align: left;
+}
+
+.card--expandable .card__toggle .card__title {
+  margin: 0;
+  color: inherit;
+  font-size: var(--fs-md);
+  line-height: var(--lh-snug);
+}
+
+.card__sign {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-pill);
+  background: var(--c-dorado);
+  color: var(--c-azul-profundo);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  line-height: 1;
+  transition: transform var(--dur) var(--ease);
+}
+
+.card--expandable[data-open="true"] .card__sign {
+  transform: rotate(45deg);            /* + becomes x */
+}
+
+.card--expandable .card__body {
+  padding: var(--sp-4);
+  font-size: var(--fs-sm);
+}
+
+.cards__note {
+  margin: var(--sp-3) 0 0;
+  font-size: var(--fs-xs);
+  font-style: italic;
+  color: var(--c-ink-muted);
+}
+
+.card .figure img,
+.card .img-ph {
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  min-height: 0;
+}
+
+.card__title {
+  margin: 0;
+  font-size: var(--fs-lg);
+}
+
+.card .prose {
+  font-size: var(--fs-sm);
+}
+
+/* ---- Flip cards ---------------------------------------------------------------- */
+.flipcards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: var(--sp-4);
+}
+
+.flipcard {
+  position: relative;
+  min-height: 240px;
+  perspective: 1200px;
+}
+
+.flipcard__btn {
+  position: absolute;
+  inset: 0;
+  z-index: 1;                 /* above the faces: the whole card is clickable */
+  width: 100%;
+  border-radius: var(--radius-lg);
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+}
+
+.flipcard__inner {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transition: transform var(--dur-slow) var(--ease);
+}
+
+.flipcard[data-flipped="true"] .flipcard__inner {
+  transform: rotateY(180deg);
+}
+
+.flipcard__face {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--sp-3);
+  padding: var(--sp-5);
+  border-radius: var(--radius-lg);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  overflow: auto;
+  box-shadow: var(--shadow-2);
+}
+
+.flipcard__front {
+  background: var(--c-surface);
+  border: 1px solid var(--c-line);
+}
+
+.flipcard__front img {
+  width: 100%;
+  height: 110px;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+}
+
+.flipcard__back {
+  background: var(--c-accent);
+  color: #fff;
+  transform: rotateY(180deg);
+}
+
+.flipcard__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-snug);
+}
+
+.flipcard__back .prose {
+  font-size: var(--fs-sm);
+}
+
+.flipcard__hint {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  color: var(--c-ink-muted);
+}
+
+.flipcard__back .flipcard__hint {
+  color: rgb(255 255 255 / 0.85);
+}
+
+.flipcard__hint svg {
+  width: 14px;
+  height: 14px;
+}
+
+.visited-dot {
+  position: absolute;
+  top: var(--sp-3);
+  right: var(--sp-3);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: var(--radius-pill);
+  background: var(--c-success);
+  color: #fff;
+  pointer-events: none;
+}
+
+.visited-dot svg {
+  width: 14px;
+  height: 14px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .flipcard__inner { transition: none; }
+}
+
+/* ---- Hotspots -------------------------------------------------------------- */
+.hotspots {
+  position: relative;
+}
+
+.hotspots__canvas {
+  position: relative;
+}
+
+.hotspots__canvas img,
+.hotspots__canvas .img-ph {
+  width: 100%;
+  border-radius: var(--radius-md);
+}
+
+.hotspot {
+  position: absolute;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 3px solid #fff;
+  border-radius: var(--radius-pill);
+  background: var(--c-accent);
+  color: #fff;
+  box-shadow: 0 0 0 0 rgb(29 46 82 / 0.5), var(--shadow-2);
+  font-weight: var(--fw-bold);
+  transform: translate(-50%, -50%);
+  animation: hotspot-pulse 2.4s var(--ease) infinite;
+}
+
+.hotspot[data-visited="true"] {
+  background: var(--c-success);
+  animation: none;
+}
+
+.hotspot svg {
+  width: 18px;
+  height: 18px;
+}
+
+@keyframes hotspot-pulse {
+  0% { box-shadow: 0 0 0 0 rgb(29 46 82 / 0.45), var(--shadow-2); }
+  70% { box-shadow: 0 0 0 14px rgb(29 46 82 / 0), var(--shadow-2); }
+  100% { box-shadow: 0 0 0 0 rgb(29 46 82 / 0), var(--shadow-2); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hotspot { animation: none; }
+}
+
+.hotspots__legend {
+  margin: var(--sp-3) 0 0;
+  font-size: var(--fs-xs);
+  color: var(--c-ink-muted);
+}
+
+/* ---- Layer buttons ---------------------------------------------------------- */
+.layer-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+}
+
+.layer-buttons .btn[data-visited="true"]::after {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: var(--radius-pill);
+  background: var(--c-success);
+}
+
+/* ---- Modal layer ------------------------------------------------------------ */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: grid;
+  place-items: center;
+  padding: var(--sp-4);
+}
+
+.modal__backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgb(15 26 48 / 0.55);
+  animation: fade-in var(--dur) var(--ease);
+}
+
+.modal__dialog {
+  position: relative;
+  width: min(100%, 640px);
+  max-height: calc(100dvh - 2 * var(--sp-4));
+  overflow: auto;
+  padding: var(--sp-6);
+  border-radius: var(--radius-lg);
+  background: var(--c-surface);
+  box-shadow: var(--shadow-3);
+  animation: dialog-in var(--dur) var(--ease);
+}
+
+.modal__dialog--wide {
+  width: min(100%, 880px);
+}
+
+.modal__close {
+  position: absolute;
+  top: var(--sp-2);
+  right: var(--sp-2);
+}
+
+.modal__title {
+  margin-right: var(--sp-7);
+  font-size: var(--fs-xl);
+}
+
+.modal__body > * + * {
+  margin-top: var(--sp-4);
+}
+
+.modal__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: var(--sp-3);
+  margin-top: var(--sp-5);
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes dialog-in {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ---- Inline glossary term -------------------------------------------------- */
+.term {
+  padding: 0;
+  border: 0;
+  border-bottom: 2px dotted var(--c-accent);
+  background: none;
+  color: inherit;
+  font-weight: var(--fw-semibold);
+  line-height: inherit;
+}
+
+.term:hover {
+  color: var(--c-accent);
+}
+
+/* ---- Dev-only markers (debug mode) ---------------------------------------- */
+.dev-marker {
+  padding: var(--sp-3) var(--sp-4);
+  border: 1px dashed var(--c-warning);
+  border-radius: var(--radius-md);
+  background: var(--c-warning-soft);
+  color: var(--c-warning);
+  font-size: var(--fs-xs);
+}
+
+.dev-marker strong {
+  display: block;
+  margin-bottom: var(--sp-1);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ---- Video player (custom controls) ---------------------------------------
+   The storyboard requires stop / pause / speed / CC, which native controls
+   expose inconsistently across browsers, so the player is ours. */
+.vp {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.vp__stage {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--c-azul-profundo);
+}
+
+/* A vertical recording: the frame follows the video instead of boxing it into
+   16:9, and it is centred with a height the slide can hold. */
+.vp--portrait .vp__stage {
+  width: auto;
+  max-width: 100%;
+  height: min(430px, 58vh);
+  margin-inline: auto;
+}
+
+.vp--portrait .vp__stage video {
+  object-fit: contain;              /* a screen recording keeps its edges */
+}
+
+@media (max-width: 899.98px) {
+  .vp--portrait .vp__stage { height: min(60vh, 460px); }
+}
+
+.vp__stage video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background: var(--c-azul-profundo);
+}
+
+.vp__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: var(--sp-2) var(--sp-3);
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-pill);
+  background: var(--c-surface);
+}
+
+.vp__bar .icon-btn {
+  width: 40px;
+  height: 40px;
+  flex: none;
+}
+
+.vp__play {
+  background: var(--c-accent);
+  color: var(--c-accent-ink);
+}
+
+.vp__play:hover:not(:disabled) {
+  background: var(--c-accent-strong);
+}
+
+.vp__seek {
+  flex: 1;
+  min-width: 60px;
+  accent-color: var(--c-accent);
+}
+
+.vp__time {
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--c-ink-muted);
+  white-space: nowrap;
+}
+
+.vp__rate {
+  min-width: 46px;
+  min-height: 34px;
+  padding: 0 var(--sp-2);
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-pill);
+  background: var(--c-surface);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-semibold);
+  font-variant-numeric: tabular-nums;
+}
+
+.vp__cc[aria-pressed="true"] {
+  background: var(--c-accent);
+  color: var(--c-accent-ink);
+}
+
+.vp__cc:disabled {
+  opacity: 0.4;
+}
+
+.vp__transcript-btn {
+  align-self: flex-start;
+  min-height: 36px;
+  font-size: var(--fs-xs);
+}
+
+.vp__transcript {
+  padding: var(--sp-4);
+  border-radius: var(--radius-md);
+  background: var(--c-surface-alt);
+  font-size: var(--fs-sm);
+}
+
+/* Fullscreen: the bar keeps working on top of the video. */
+.vp:fullscreen {
+  justify-content: center;
+  padding: var(--sp-4);
+  background: var(--c-azul-profundo);
+}
+
+.vp:fullscreen .vp__stage {
+  aspect-ratio: auto;
+  height: 82vh;
+}
+
+@media (max-width: 599.98px) {
+  .vp__time,
+  .vp__rate {
+    display: none;             /* keep play / stop / seek / CC reachable */
+  }
+}
+
+/* ---- Timed reveals (storyboard triggers) --------------------------------- */
+.reveal[data-reveal-state="hidden"] {
+  visibility: hidden;
+}
+
+/* ---- A block that takes over the screen ----------------------------------
+   Client 2026-09-21: on the welcome screen the banner must not decide how big
+   the video window is. A block marked `"takesOver": true` costs no room until
+   its turn, and when it arrives the hero of the screen steps aside for it. */
+.reveal--takeover[data-reveal-state="hidden"],
+.reveal--collapsed[data-reveal-state="hidden"] {
+  display: none;
+}
+
+.screen__body:has(> .reveal--takeover[data-reveal-state="shown"]) > .reveal:has(> .banner),
+.screen__body:has(> .reveal--takeover[data-reveal-state="shown"]) > .banner,
+.screen__body:has(> .reveal--takeover[data-reveal-state="shown"]) > .spacer,
+.screen:has(.reveal--takeover[data-reveal-state="shown"]) .screen__title--spacer,
+/* `"stepsAside": true`: this block belongs to the first scene (ML03 screen 3,
+   the five roles) and leaves when the second one arrives. */
+.screen:has(.reveal--takeover[data-reveal-state="shown"]) .block--steps-aside {
+  display: none;
+}
+
+/* Until the takeover arrives, a split screen is a single column: the first
+   scene gets the whole slide instead of half of it. */
+.screen__aside:has(> .reveal--takeover[data-reveal-state="hidden"]) {
+  display: none;
+}
+
+.screen--split .screen__body:has(> .screen__aside > .reveal--takeover[data-reveal-state="hidden"]) {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+/* What is left of the slide, at 16:9: bigger than the reading column it used
+   to sit in, and it still fits without scrolling. */
+.reveal--takeover .video,
+.reveal--takeover .video-ph {
+  max-width: 800px;                 /* 16:9 in what is left of the slide */
+  margin-inline: auto;
+}
+
+/* The credit line belongs to the video, not to the reading column. */
+.reveal--takeover .prose {
+  max-width: none;
+  text-align: center;
+}
+
+.reveal--fade[data-reveal-state="shown"] {
+  animation: reveal-fade var(--dur-reveal) var(--ease);
+}
+
+.reveal--rise[data-reveal-state="shown"] {
+  animation: reveal-rise var(--dur-reveal) var(--ease);
+}
+
+/* The image travels in from the left and lands (ML03 screen 3). */
+.reveal--slide[data-reveal-state="shown"] {
+  animation: reveal-slide var(--dur-reveal) var(--ease);
+}
+
+@keyframes reveal-slide {
+  from { opacity: 0; transform: translateX(-24%); }
+  to { opacity: 1; transform: none; }
+}
+
+/* "The text … written, shows when the VO says it": a left-to-right wipe. */
+.reveal--write[data-reveal-state="shown"] {
+  animation: reveal-write var(--dur-reveal) var(--ease);
+}
+
+@keyframes reveal-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes reveal-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes reveal-write {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0 0 0 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal[data-reveal-state="shown"] {
+    animation: none;
+  }
+}
+
+/* ---- Timeline of flip cards (Screen 4: clickable eras) ------------------- */
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.flipcards--timeline {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: var(--sp-3);
+}
+
+/* The connector line that "joins all eras". */
+.flipcards--timeline::before {
+  content: "";
+  position: absolute;
+  top: 25px;
+  left: 8%;
+  right: 8%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--c-dorado-suave), var(--c-dorado));
+}
+
+.flipcards--timeline .flipcard {
+  display: grid;
+  grid-template-rows: auto 1fr;      /* number band, then the art */
+  align-items: center;
+  padding-top: 52px;                 /* clears the number badge */
+  min-height: 250px;
+}
+
+.flipcards--timeline .flipcard__inner,
+.flipcards--timeline .flipcard__face {
+  display: grid;
+  /* place-content centres the track itself: `align-content` alone left the
+     single column packed against the left edge on a phone (client 2026-09-15). */
+  place-content: center;
+  justify-items: center;
+}
+
+.flipcard__step {
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  border: 2px solid var(--c-dorado);
+  border-radius: var(--radius-pill);
+  background: var(--c-surface);
+  color: var(--c-accent);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  transform: translateX(-50%);
+}
+
+.flipcards--timeline .flipcard__front img {
+  width: auto;
+  max-width: 100%;
+  height: 130px;
+  object-fit: contain;
+  background: none;
+}
+
+.flipcards--timeline .flipcard__back {
+  display: grid;
+  place-content: center;
+  text-align: center;
+}
+
+@media (max-width: 899.98px) {
+  .flipcards--timeline {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .flipcards--timeline::before {
+    display: none;
+  }
+
+  /* Stacked cards: no need for the desktop height, the art would float in
+     a mostly empty box. */
+  .flipcards--timeline .flipcard {
+    min-height: 200px;
+    padding-top: 46px;
+  }
+}
+
+@media (max-width: 479.98px) {
+  .flipcards--timeline {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+.timeline__hint {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--c-ink-muted);
+}
+
+/* ---- Emoji reactions (Screen 9) ------------------------------------------ */
+.reactions {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: clamp(var(--sp-3), 4vw, var(--sp-6));
+  height: 120px;
+  margin-top: var(--sp-4);
+  pointer-events: none;
+}
+
+.reactions__item {
+  font-size: 2.25rem;
+  line-height: 1;
+  animation: reaction-float 2.8s var(--ease) calc(var(--i) * 260ms) both;
+}
+
+/* Rise like a video-call reaction, then stay: the completion screen keeps
+   something to look at instead of going blank. */
+@keyframes reaction-float {
+  0% { opacity: 0; transform: translateY(24px) scale(0.6); }
+  55% { opacity: 1; transform: translateY(-52px) scale(1.08); }
+  100% { opacity: 1; transform: translateY(-42px) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reactions {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: var(--sp-4);
+    height: auto;
+  }
+
+  .reactions__item {
+    position: static;
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* ---- Figure sizes --------------------------------------------------------- */
+/* Transparent art (logo, era icons) must not sit on a grey plate. */
+.figure--logo img,
+.figure--logo svg,
+.flipcards--timeline .flipcard__front img {
+  background: none;
+}
+
+.figure--logo img,
+.figure--logo svg {
+  width: min(280px, 70%);
+  margin-inline: auto;
+}
+
+.figure--sm img {
+  width: min(320px, 100%);
+}
+
+.figure--portrait img {
+  width: min(340px, 100%);
+  max-height: 420px;
+  object-fit: cover;
+  object-position: center top;
+  border-radius: var(--radius-md);
+}
+
+/* ---- WhatsApp callout (Screen 8: "Icon: WhatsApp icon") ------------------- */
+.callout--whatsapp {
+  border-left-color: #25d366;
+}
+
+.callout--whatsapp > svg {
+  color: #128c7e;
+}
+
+/* ---- Icon + label chip (storyboard "Icon: … icon") ----------------------- */
+.badge-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin: 0;
+  padding: var(--sp-2) var(--sp-4);
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-pill);
+  background: var(--c-surface);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  align-self: flex-start;
+}
+
+.badge-chip svg {
+  width: 20px;
+  height: 20px;
+}
+
+.badge-chip--whatsapp svg {
+  color: #128c7e;
+}
+
+/* ---- Learning objective box (Screen 2.1) ---------------------------------
+   Client 2026-09-15: the LO goes in a navy rounded box, bigger and in the
+   display face, keeping the storyboard's bold words. */
+.callout--objective {
+  grid-template-columns: 1fr;
+  /* Edge to edge: cancel the SCREEN's own padding on both sides (--screen-pad
+     is 0 on a screen that has none, so the box just fills the width instead of
+     spilling past it). --stage-pad is left to .callout--band. */
+  width: auto;
+  margin-inline: calc(-1 * var(--screen-pad, 0px));
+  padding: clamp(var(--sp-5), 3vw, var(--sp-7));
+  border: 0;
+  border-radius: var(--radius-lg);
+  background: var(--c-azul);
+  color: var(--c-blanco);
+  text-align: center;
+}
+
+.callout--objective > svg {
+  display: none;
+}
+
+.callout--objective .prose {
+  /* 34ch is wider than a phone: cap it or the text is clipped by the screen. */
+  max-width: min(34ch, 100%);
+  margin-inline: auto;
+  font-family: var(--font-display);
+  font-size: clamp(var(--fs-lg), 5vw, var(--fs-xl));
+  line-height: var(--lh-snug);
+  color: var(--c-blanco);
+  overflow-wrap: break-word;
+}
+
+.callout--objective .prose strong {
+  font-weight: var(--fw-bold);
+  color: var(--c-dorado-suave);
+}
+
+/* ---- Highlight band (key message / pull quote) ---------------------------
+   Client 2026-09-15: gold box that runs off the edge of the screen.
+   On both screens that use it the copy column sits on the left, so the band
+   bleeds out through the left edge: it cancels the stage padding
+   (--stage-pad, set by .stage__inner and by .screen--cover) and adds the
+   same amount back as padding, keeping the text aligned with the column. */
+.callout--band {
+  position: relative;
+  border-left: 0;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  background: var(--c-dorado);
+  color: var(--c-azul-profundo);
+  padding: clamp(var(--sp-4), 2.5vw, var(--sp-6));
+  /* a little past the edge, so the box reads as cut off, not merely flush */
+  margin-left: calc(-1 * (var(--stage-pad, var(--sp-5)) + var(--sp-5)));
+  padding-left: calc(var(--stage-pad, var(--sp-5)) + var(--sp-5) + clamp(var(--sp-4), 2.5vw, var(--sp-6)));
+}
+
+.callout--band > svg {
+  color: var(--c-azul-profundo);
+  width: 26px;
+  height: 26px;
+}
+
+.callout--band .prose,
+.callout--band .callout__title {
+  color: var(--c-azul-profundo);
+}
+
+.callout--band .prose strong {
+  color: var(--c-azul-profundo);
+}
+
+.callout--quote.callout--band {
+  border-left: 0;
+  font-style: italic;
+}
+
+/* On a cover screen the band keeps its own colours. */
+.screen--cover .callout--band {
+  background: var(--c-dorado);
+  backdrop-filter: none;
+}
+
+/* ---- Outlined highlight (a message without the key-message icon) ---------
+   Client 2026-09-15 V2: beige border, no beige fill, and no bleed — the gold
+   box that runs off the edge is reserved for the key message. */
+.callout--outline {
+  border: 2px solid var(--c-dorado);
+  border-radius: var(--radius-md);
+  background: none;
+}
+
+.callout--outline.callout--quote {
+  border-left-color: var(--c-dorado);
+}
+
+/* ---- Round portraits ------------------------------------------------------
+   Client 2026-09-15: the founder in a circle, no frame. */
+.figure--avatar img,
+.figure--circle img {
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  object-position: center top;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: none;
+  margin-inline: auto;
+}
+
+.figure--avatar img {
+  width: 84px;
+  max-height: none;
+}
+
+.figure--circle img {
+  width: min(300px, 80%);
+  max-height: none;
+}
+
+@media (max-width: 899.98px) {
+  /* On a phone the portrait leads the screen: keep it friendly, not huge. */
+  .figure--circle img {
+    width: min(210px, 58%);
+  }
+}
+
+/* ---- Carousel (ML02 screen 4: swipeable fields of action) -----------------
+   The banner stays put; the track scrolls with scroll-snap so a finger swipe
+   is the browser's own scrolling — no gesture library, works offline. */
+.carousel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-3);
+}
+
+.carousel__banner {
+  margin: 0;
+  padding: var(--sp-3) var(--sp-4);
+  border-radius: var(--radius-md);
+  background: var(--c-azul);
+  color: var(--c-blanco);
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+}
+
+.carousel__viewport {
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+
+.carousel__track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 100%;
+  gap: var(--sp-4);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.carousel__track::-webkit-scrollbar { display: none; }
+
+.carousel__slide {
+  scroll-snap-align: center;
+  display: grid;
+  gap: var(--sp-4);
+  align-content: start;
+  padding: var(--sp-5);
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-lg);
+  background: var(--c-surface);
+}
+
+.carousel__figure {
+  margin: 0;
+}
+
+.carousel__figure img {
+  width: 100%;
+  max-height: 260px;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+}
+
+.carousel__title {
+  margin: 0 0 var(--sp-2);
+  font-size: var(--fs-lg);
+}
+
+.carousel__nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--sp-3);
+}
+
+.carousel__arrow {
+  border: 1px solid var(--c-line-strong);
+}
+
+.carousel__arrow:disabled { opacity: 0.35; }
+
+.carousel__dots {
+  display: flex;
+  gap: var(--sp-2);
+}
+
+.carousel__dot {
+  width: 10px;
+  height: 10px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: var(--c-line-strong);
+}
+
+.carousel__dot[aria-selected="true"] {
+  background: var(--c-accent);
+  transform: scale(1.25);
+}
+
+@media (min-width: 900px) {
+  .carousel__track { grid-auto-columns: minmax(0, 48%); }
+}
+
+/* ---- Categorize (ML02 screen 6: drop each task into its function) --------- */
+.categorize {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-4);
+}
+
+.categorize__tray {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-2);
+  min-height: 64px;
+  padding: var(--sp-3);
+  border: 2px dashed var(--c-line-strong);
+  border-radius: var(--radius-md);
+}
+
+.categorize__board {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--sp-3);
+}
+
+@media (min-width: 900px) {
+  /* One column per bucket, so the four functions read as a single row. */
+  .categorize__board {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+.categorize__bucket {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+}
+
+.categorize__name {
+  margin: 0;
+  font-size: var(--fs-sm);
+  letter-spacing: var(--ls-label);
+  text-transform: uppercase;
+  color: var(--c-vino);
+}
+
+.categorize__drop {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  min-height: 96px;
+  padding: var(--sp-3);
+  border: 2px dashed var(--c-line);
+  border-radius: var(--radius-md);
+  background: var(--c-surface-alt);
+}
+
+.categorize__tray[data-over="true"],
+.categorize__drop[data-over="true"] {
+  border-color: var(--c-accent);
+  border-style: solid;
+  background: var(--c-accent-soft);
+}
+
+.categorize__chip {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: var(--sp-2);
+  padding: var(--sp-3);
+  border: 1px solid var(--c-line-strong);
+  border-radius: var(--radius-md);
+  background: var(--c-surface);
+  font-size: var(--fs-sm);
+  touch-action: none;                 /* the pointer drag owns the gesture */
+  cursor: grab;                       /* the whole card is the handle */
+}
+
+.categorize__chip:active {
+  cursor: grabbing;
+}
+
+/* Grip dots: make it obvious the card itself can be dragged. */
+.categorize__text::before {
+  content: "";
+  float: left;
+  width: 10px;
+  height: 16px;
+  margin: 2px var(--sp-2) 0 0;
+  background-image: radial-gradient(circle, var(--c-line-strong) 1.4px, transparent 1.5px);
+  background-size: 5px 5px;
+  opacity: 0.9;
+}
+
+.categorize__chip[data-result] { cursor: default; }
+.categorize__chip[data-result] .categorize__text::before { display: none; }
+
+.categorize__chip[data-dragging="true"] {
+  opacity: 0.6;
+  border-color: var(--c-accent);
+}
+
+.categorize__select {
+  grid-column: 1 / -1;
+  font-size: var(--fs-xs);
+}
+
+.categorize__mark svg { width: 20px; height: 20px; }
+
+.categorize__chip[data-result="correct"] { border-color: var(--c-success); }
+.categorize__chip[data-result="correct"] .categorize__mark { color: var(--c-success); }
+.categorize__chip[data-result="incorrect"] { border-color: var(--c-error); }
+.categorize__chip[data-result="incorrect"] .categorize__mark { color: var(--c-error); }
+
+.categorize__empty {
+  margin: 0;
+  font-size: var(--fs-xs);
+  color: var(--c-ink-muted);
+}
+
+/* ML02 screen 5: the four functions as gold icons aligned in tabs. */
+.tabs__tab--icon {
+  display: grid;
+  justify-items: center;
+  gap: var(--sp-2);
+  padding-block: var(--sp-3);
+}
+
+.tabs__tab--icon .icon {
+  width: 30px;
+  height: 30px;
+  color: var(--c-dorado);
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.tabs__tab--icon[aria-selected="true"] .icon {
+  /* same gold on every term: only the label marks which one is open */
+  transform: scale(1.1);
+}
+
+/* ---- Tabs, vertical rail (ML02 screen 5, client 2026-09-16) ---------------
+   The four gold icons stack on the left; the selected panel sits beside them.
+   Below 700px the rail goes back to a row above the panel. */
+.tabs--vertical {
+  display: grid;
+  grid-template-columns: minmax(150px, 220px) minmax(0, 1fr);
+  gap: clamp(var(--sp-4), 3vw, var(--sp-6));
+  align-items: start;
+}
+
+.tabs--vertical .tabs__list {
+  flex-direction: column;
+  align-items: stretch;
+  gap: var(--sp-2);
+  border-bottom: 0;
+  border-right: 1px solid var(--c-line);
+  padding-right: var(--sp-3);
+}
+
+.tabs--vertical .tabs__tab {
+  justify-items: start;
+  grid-template-columns: auto 1fr;
+  gap: var(--sp-3);
+  text-align: left;
+  padding: var(--sp-3);
+  border-radius: var(--radius-md);
+}
+
+.tabs--vertical .tabs__tab[aria-selected="true"] {
+  background: var(--c-accent-soft);
+}
+
+.tabs--vertical .tabs__panel {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+@media (max-width: 699.98px) {
+  .tabs--vertical {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tabs--vertical .tabs__list {
+    flex-direction: row;
+    flex-wrap: wrap;
+    border-right: 0;
+    border-bottom: 1px solid var(--c-line);
+    padding-right: 0;
+    padding-bottom: var(--sp-2);
+  }
+
+  .tabs--vertical .tabs__panel {
+    grid-column: 1;
+    grid-row: auto;
+  }
+}
+
+/* ---- Text over the frozen last frame (ML02 screen 3, storyboard v2) -------
+   "On top, this text on a blue CruCo text box appears on top of the frozen
+   video." Also laid over the placeholder so the screen can be reviewed. */
+.vp__endtext {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(var(--sp-4), 6%, var(--sp-7));
+  z-index: 3;
+  width: min(86%, 760px);
+  padding: clamp(var(--sp-4), 2.5vw, var(--sp-6));
+  border-radius: var(--radius-lg);
+  background: var(--c-azul);
+  color: var(--c-blanco);
+  box-shadow: var(--shadow-2);
+  transform: translateX(-50%);
+  animation: reveal-fade var(--dur-reveal) var(--ease) both;
+}
+
+.vp__endtext[hidden] {
+  display: none;
+}
+
+.vp__endtext .prose {
+  max-width: none;
+  font-size: clamp(var(--fs-sm), 0.85rem + 0.45vw, var(--fs-lg));
+  line-height: var(--lh-snug);
+  color: var(--c-blanco);
+  text-align: center;
+}
+
+@media (max-width: 599.98px) {
+  /* On a phone the frame is too short for the box: it sits under the video. */
+  .vp__endtext {
+    position: static;
+    width: auto;
+    margin-top: var(--sp-3);
+    transform: none;
+  }
+
+  .video-ph .vp__endtext {
+    position: static;
+    width: 100%;
+  }
+}
+
+/* ---- Carousel: one field per view, the gold illustration beside its text ---
+   Storyboard: "Almost full screen image carrousel that needs to be swiped". The
+   illustrations are transparent line art, so they are shown whole (contain)
+   and never cropped or set on a grey plate. */
+.carousel__track {
+  grid-auto-columns: 100%;
+}
+
+@media (min-width: 900px) {
+  .carousel__track { grid-auto-columns: 100%; }
+
+  .carousel__slide {
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+    align-items: center;
+    gap: clamp(var(--sp-5), 3vw, var(--sp-7));
+    min-height: 240px;
+  }
+}
+
+.carousel__figure img {
+  width: 100%;
+  height: auto;
+  /* leaves room for the banner, the instruction and the arrows inside the slide */
+  max-height: 240px;
+  object-fit: contain;
+  background: none;
+  border-radius: 0;
+}
+
+.carousel__title {
+  font-size: var(--fs-xl);
+}
+
+.carousel__complete-audio {
+  display: none;
+}
+
+@media (max-width: 599.98px) {
+  /* Phone: keep the field's title and text on screen with the illustration. */
+  .carousel__figure img {
+    max-height: 190px;
+  }
+
+  .carousel__slide {
+    padding: var(--sp-4);
+    gap: var(--sp-3);
+  }
+}
+
+/* ---- Tabs, vertical rail in Monocle style (ML02 screen 5, storyboard v2) ---
+   "Text of the titles of each category in monocle style (decorative) and
+   filling the space. Utilize the same font as the one in the title of the
+   slide." Large display serif, thin rules, generous air; the gold icon stays. */
+.tabs--vertical {
+  grid-template-columns: minmax(240px, 0.95fr) minmax(0, 1.05fr);
+}
+
+.tabs--vertical .tabs__list {
+  gap: 0;
+  padding-right: clamp(var(--sp-4), 2.5vw, var(--sp-6));
+  border-right: 1px solid var(--c-line);
+}
+
+.tabs--vertical .tabs__tab {
+  min-height: 0;
+  align-items: center;
+  padding: var(--sp-2);
+  border-bottom: 1px solid var(--c-line);
+  border-radius: 0;
+  color: var(--c-ink-muted);
+  font-family: var(--font-display);
+  /* capped so the four functions, the instruction and the text fit the slide */
+  font-size: clamp(1.375rem, 1rem + 1.1vw, 2rem);
+  font-weight: var(--fw-semibold);
+  line-height: 1.05;
+  letter-spacing: -0.01em;
+  white-space: normal;
+}
+
+.tabs--vertical .tabs__tab:last-child {
+  border-bottom: 0;
+}
+
+/* `"dividers": false`: the list reads as a list without ruling every item. */
+.tabs--no-dividers .tabs__tab,
+.tabs--no-dividers .tabs__list {
+  border-bottom: 0;
+  border-right: 0;
+}
+
+.tabs--vertical .tabs__tab {
+  grid-template-columns: auto minmax(0, 1fr);
+}
+
+.tabs--vertical .tabs__tab .icon {
+  width: 0.9em;
+  min-width: 0.9em;
+  height: 0.9em;
+}
+
+.tabs--vertical .tabs__tab[aria-selected="true"] {
+  background: none;
+  color: var(--c-azul);
+  /* the beige bar marks the term that is open (the icons all stay gold) */
+  box-shadow: inset 3px 0 0 var(--c-dorado);
+  padding-left: var(--sp-4);
+}
+
+.tabs--vertical .tabs__panel {
+  align-self: center;
+  font-size: var(--fs-lg);
+}
+
+@media (max-width: 699.98px) {
+  /* Phone: the same list, stacked full width above the text (the desktop grid
+     rule above would otherwise keep a narrow 240px column). */
+  .tabs--vertical {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .tabs--vertical .tabs__list {
+    flex-direction: column;
+    padding-right: 0;
+    border-right: 0;
+    border-bottom: 0;
+  }
+
+  .tabs--vertical .tabs__tab {
+    font-size: var(--fs-xl);
+    padding: var(--sp-2) var(--sp-2);
+  }
+
+  .tabs--vertical .tabs__tab[aria-selected="true"] {
+    color: var(--c-azul);
+    box-shadow: inset 3px 0 0 var(--c-dorado);
+    padding-left: var(--sp-4);
+  }
+
+  .tabs--vertical .tabs__panel {
+    grid-column: 1;
+    grid-row: auto;
+    font-size: var(--fs-md);
+  }
+}
+
+/* ---- Instruction line inside a block (carousel, tabs) --------------------- */
+.block-hint {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--c-ink-muted);
+}
+
+.tabs__hint {
+  grid-column: 1 / -1;
+  margin-bottom: var(--sp-2);
+}
+
+/* The four functions stacked: the list above, the text below. Used by the
+   variant that puts a photo beside the list (ML02 screen 5b). */
+.tabs--stacked.tabs--vertical {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.tabs--stacked.tabs--vertical .tabs__list {
+  flex-direction: column;
+  padding-right: 0;
+  border-right: 0;
+}
+
+.tabs--stacked.tabs--vertical .tabs__tab {
+  font-size: clamp(1.25rem, 0.95rem + 0.9vw, 1.75rem);
+}
+
+.tabs--stacked.tabs--vertical .tabs__panel {
+  grid-column: 1;
+  grid-row: auto;
+  font-size: var(--fs-md);
+}
+
+/* ---- "pulse" entrance: grows and settles, to point at what the VO names --- */
+.reveal--pulse[data-reveal-state="shown"] {
+  animation: reveal-pulse 900ms var(--ease);
+}
+
+@keyframes reveal-pulse {
+  0%   { opacity: 0; transform: scale(0.94); }
+  45%  { opacity: 1; transform: scale(1.09); }
+  70%  { transform: scale(0.99); }
+  100% { transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal--pulse[data-reveal-state="shown"] { animation: none; }
+}
+
+/* ---- Tall photo beside a list (ML02 screen 5b) ---------------------------- */
+.figure--cover {
+  margin: 0;
+  height: 100%;
+}
+
+.figure--cover img {
+  width: 100%;
+  height: 100%;
+  /* fits inside the 16:9 slide next to the title and the audio bar */
+  max-height: 330px;
+  object-fit: cover;
+  /* a cropped photograph keeps the face, not the ceiling */
+  object-position: center 22%;
+  border-radius: var(--radius-md);
+}
+
+@media (max-width: 899.98px) {
+  .figure--cover img { max-height: 260px; }
+}
+
+/* ---- CruCo brand ground (banner + slide background) -----------------------
+   The client's own artwork (Banner2100x700px.png, Drive, 2026-09-21): the deep
+   brand blue with the emblem drawn faintly into the right edge. No wordmark in
+   it — the lockup goes on top, and repeating it as a watermark was what the
+   client asked us to drop. */
+.brand-bg {
+  position: relative;
+  background-color: #182c53;                  /* the ground of that artwork */
+  background-image: url("../assets/images/brand/banner-cruco.jpg");
+  background-repeat: no-repeat;
+  background-position: right center;
+  background-size: cover;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.brand-bg > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---- Banner (ML01 screen 1) ----------------------------------------------
+   Presence of a Rise hero (1680x560): 3:1, edge to edge of the slide, with
+   the white lockup centred. */
+.banner {
+  display: grid;
+  place-items: center;
+  aspect-ratio: 3 / 1;
+  /* out to both edges, the way the Rise hero spans its page */
+  width: auto;
+  margin-inline: calc(-1 * var(--stage-pad, var(--sp-5)));
+  padding: var(--sp-5);
+  border-radius: 0;
+  /* the artwork is 3:1 like the banner itself, so it lands exactly as drawn */
+  background-position: center;
+}
+
+.banner__logo {
+  width: min(34%, 400px);
+  height: auto;
+}
+
+@media (max-width: 599.98px) {
+  .banner {
+    aspect-ratio: 2 / 1;                      /* a 3:1 strip is too thin here */
+  }
+
+  .banner__logo {
+    width: min(68%, 320px);
+  }
+}
+
+/* The ground can arrive on cue (ML03 screen 3: the screen turns blue when the
+   second half of the narration starts). Only the paint fades; the dark-context
+   tokens come with the class, so text never sits light-on-light. */
+.brand-bg--later {
+  transition: background-color 700ms var(--ease);
+}

@@ -1,0 +1,449 @@
+/* =========================================================================
+   CruCo · Screen layouts
+   Layouts selectable per screen via `layout` in the content data:
+   standard | split | cover | centered.
+   ========================================================================= */
+
+.screen {
+  max-width: var(--stage-max);
+  margin: 0 auto;
+}
+
+/* ---- Slide change (Storyline-style) --------------------------------------
+   The outgoing slide steps aside, the new one comes in from the direction
+   you are travelling, and its blocks enter one after another. */
+.screen[data-enter="jump"] { animation: screen-in var(--dur-slow) var(--ease); }
+.screen[data-enter="next"] { animation: slide-in-next 320ms var(--ease); }
+.screen[data-enter="prev"] { animation: slide-in-prev 320ms var(--ease); }
+
+.stage__inner[data-leaving] { animation: slide-out 130ms var(--ease) forwards; }
+.stage__inner[data-leaving="prev"] { animation-name: slide-out-prev; }
+
+.block-enter {
+  animation: block-in 420ms var(--ease) both;
+  animation-delay: calc(var(--i, 0) * 70ms);
+}
+
+@keyframes screen-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes slide-in-next {
+  from { opacity: 0; transform: translateX(28px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes slide-in-prev {
+  from { opacity: 0; transform: translateX(-28px); }
+  to { opacity: 1; transform: none; }
+}
+
+@keyframes slide-out {
+  to { opacity: 0; transform: translateX(-18px); }
+}
+
+@keyframes slide-out-prev {
+  to { opacity: 0; transform: translateX(18px); }
+}
+
+@keyframes block-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .screen,
+  .block-enter,
+  .stage__inner[data-leaving] {
+    animation: none !important;
+  }
+}
+
+.screen__header {
+  max-width: 860px;
+  margin-bottom: var(--sp-6);
+}
+
+/* Nothing visible in it (the heading is there only for screen readers): it
+   must not eat 2rem of a slide that cannot grow. */
+.screen__header--bare {
+  margin-bottom: 0;
+}
+
+.screen__title {
+  margin-bottom: var(--sp-2);
+  font-size: var(--fs-2xl);
+}
+
+.screen__title:focus {
+  outline: none;
+}
+
+.screen__title:focus-visible {
+  outline: 3px solid var(--c-focus);
+  outline-offset: 6px;
+}
+
+.screen__subtitle {
+  margin: 0;
+  font-size: var(--fs-lg);
+  color: var(--c-ink-muted);
+  line-height: var(--lh-snug);
+}
+
+/* Vertical rhythm between blocks: flex gap, immune to component margins. */
+.screen__body,
+.screen__main,
+.screen__aside {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-5);
+}
+
+/* Client 2026-09-21: screen 8 of each lesson sits on the CruCo ground. It is
+   the background of the whole slide, so the screen takes over the stage
+   padding — see "slide on the brand ground" in player.css. */
+.screen--brand-bg {
+  --screen-pad: var(--stage-pad);
+  padding: clamp(var(--sp-5), 4vw, var(--sp-7));
+  border-radius: var(--radius-lg);
+  color: var(--c-dark-ink);
+  --c-ink: var(--c-dark-ink);
+  --c-ink-muted: var(--c-dark-ink-muted);
+  --c-line: var(--c-dark-line);
+  --c-surface: rgb(15 26 48 / 0.74);
+  --c-surface-alt: rgb(253 252 251 / 0.12);
+  --c-focus: var(--c-focus-invert);
+}
+
+.screen--brand-bg .screen__title {
+  color: var(--c-dark-ink);
+}
+
+/* Client 2026-09-21: on the CruCo ground the "A continuación" box was light
+   text on a light box — unreadable. It becomes a solid light box with the
+   brand blue on it, which is also the strongest contrast available. */
+.screen--brand-bg .callout--info {
+  background: var(--c-blanco);
+  border-color: var(--c-dorado);
+}
+
+.screen--brand-bg .callout--info,
+.screen--brand-bg .callout--info .callout__title,
+.screen--brand-bg .callout--info .prose,
+.screen--brand-bg .callout--info .prose strong,
+.screen--brand-bg .callout--info > svg {
+  color: var(--c-azul);
+}
+
+.screen__title--spacer {
+  visibility: hidden;                 /* keeps the space, says nothing */
+}
+
+.spacer {
+  height: clamp(var(--sp-5), 4vh, var(--sp-8));
+}
+
+.screen__duration {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin: calc(-1 * var(--sp-2)) 0 var(--sp-3);
+  font-size: var(--fs-xs);
+  color: var(--c-ink-muted);
+}
+
+.screen__duration .icon {
+  width: 1.15em;
+  height: 1.15em;
+  color: var(--c-dorado);
+}
+
+.screen--centered .screen__duration {
+  margin-inline: auto;
+}
+
+.screen__audio {
+  max-width: 860px;
+  margin: calc(-1 * var(--sp-3)) 0 var(--sp-6);
+}
+
+/* The narration plays but its bar is not shown (welcome screen). Kept in the
+   DOM — and audible — rather than removed, so the timed reveals still work. */
+.screen__audio--hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  pointer-events: none;
+}
+
+/* ---- standard ------------------------------------------------------------ */
+/* Readable measure by default; wide blocks (tabs, flip cards, hotspots)
+   may use the full stage width. */
+.screen--standard .screen__body > * {
+  max-width: 860px;
+}
+
+.screen--standard .screen__body > .block--wide {
+  max-width: none;
+}
+
+/* ---- split: text + media ------------------------------------------------- */
+.screen--split .screen__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--sp-6) clamp(var(--sp-5), 4vw, var(--sp-7));
+  align-items: start;
+}
+
+.screen--split.screen--aside-first .screen__aside {
+  order: -1;
+}
+
+@media (max-width: 899.98px) {
+  .screen--split .screen__body {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+/* ---- cover: module opener -------------------------------------------------- */
+.screen--cover {
+  position: relative;
+  display: grid;
+  align-content: end;
+  --stage-pad: clamp(var(--sp-5), 5vw, var(--sp-8));
+  --screen-pad: var(--stage-pad);
+  min-height: min(72vh, 640px);
+  padding: var(--stage-pad);
+  border-radius: var(--radius-lg);
+  background: var(--c-dark-bg);
+  color: var(--c-dark-ink);
+  overflow: hidden;
+  isolation: isolate;
+  /* Light text on the brand's deep blue: use the dark-context tokens. */
+  --c-ink: var(--c-dark-ink);
+  --c-ink-muted: var(--c-dark-ink-muted);
+  --c-line: var(--c-dark-line);
+  --c-focus: var(--c-focus-invert);
+  --c-eyebrow: var(--c-dorado);
+}
+
+.screen--cover .screen__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+}
+
+.screen--cover .screen__bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.screen--cover::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgb(15 26 48 / 0.35) 0%, rgb(15 26 48 / 0.88) 78%);
+}
+
+.screen--cover .screen__header {
+  margin-bottom: var(--sp-4);
+}
+
+.screen--cover .screen__title {
+  font-size: var(--fs-3xl);
+  color: var(--c-dark-ink);
+}
+
+.screen--cover .screen__subtitle {
+  color: var(--c-dark-ink-muted);
+}
+
+.screen--cover .screen__body {
+  max-width: 720px;
+  color: var(--c-dark-ink);
+}
+
+.screen--cover .screen__title:focus-visible {
+  outline-color: var(--c-dorado);
+}
+
+/* ---- cover, portrait photo beside the text ---------------------------------
+   For tall images (e.g. a standing sommelier): the photo holds the right
+   half and the copy sits on the brand blue at the left. Stacks on phones. */
+.screen--cover-side {
+  align-content: center;
+}
+
+.screen--cover-side .screen__bg img {
+  object-position: right center;
+}
+
+.screen--cover-side::after {
+  background: linear-gradient(90deg, rgb(15 26 48 / 0.96) 0%, rgb(15 26 48 / 0.86) 42%, rgb(15 26 48 / 0.25) 72%, rgb(15 26 48 / 0.1) 100%);
+}
+
+.screen--cover-side .screen__header,
+.screen--cover-side .screen__body {
+  max-width: min(56%, 620px);
+}
+
+@media (max-width: 899.98px) {
+  .screen--cover-side {
+    align-content: end;
+    min-height: min(86vh, 720px);
+  }
+
+  .screen--cover-side::after {
+    background: linear-gradient(180deg, rgb(15 26 48 / 0.25) 0%, rgb(15 26 48 / 0.92) 62%);
+  }
+
+  .screen--cover-side .screen__bg img {
+    object-position: center top;
+  }
+
+  .screen--cover-side .screen__header,
+  .screen--cover-side .screen__body {
+    max-width: none;
+  }
+}
+
+/* ---- centered: statements / transitions ------------------------------------ */
+.screen--centered {
+  display: grid;
+  /* minmax(0, 1fr): without it the single implicit column is sized to the
+     content's max-content width and overflows a narrow screen (client 2026-09-15). */
+  grid-template-columns: minmax(0, 1fr);
+  align-content: center;        /* keep header + body together */
+  justify-items: center;
+  min-height: 60vh;
+  text-align: center;
+}
+
+.screen--centered .screen__header,
+.screen--centered .screen__body {
+  width: 100%;              /* without this the column is sized by its content
+                               and `justify-items: center` pushes it off-screen
+                               on a phone (client 2026-09-15) */
+  max-width: 720px;
+  margin-inline: auto;
+}
+
+/* A block marked `"wide": true` (the learning-objective box) spans the whole
+   stage instead of the reading measure. */
+.screen--centered.screen--wide-body .screen__body {
+  max-width: none;
+}
+
+.screen--centered.screen--wide-body .screen__body > *:not(.block--wide) {
+  max-width: 720px;
+  margin-inline: auto;
+}
+
+.screen--centered .prose {
+  margin-inline: auto;
+}
+
+/* ---- Empty course state --------------------------------------------------- */
+.empty-course {
+  max-width: 560px;
+  margin: 12vh auto 0;
+  text-align: center;
+}
+
+.empty-course p {
+  color: var(--c-ink-muted);
+}
+
+/* Components that live on a cover screen render as dark cards: the blue is
+   the surface, gold is the interactive accent (navy on navy would vanish). */
+.screen--cover {
+  --c-surface: rgb(15 26 48 / 0.74);
+  --c-surface-alt: rgb(253 252 251 / 0.12);
+  --c-line-strong: rgb(253 252 251 / 0.5);
+  --c-accent: var(--c-dorado);
+  --c-accent-strong: var(--c-dorado-suave);
+  --c-accent-ink: var(--c-azul-profundo);
+  --c-accent-soft: rgb(224 172 98 / 0.18);
+}
+
+.screen--cover .callout {
+  backdrop-filter: blur(6px);
+  border-color: rgb(253 252 251 / 0.22);
+}
+
+.screen--cover .audio {
+  backdrop-filter: blur(6px);
+}
+
+/* ---- Slide mode: layouts fill the 16:9 stage ----------------------------- */
+.app[data-slide="on"] .screen {
+  min-height: 100%;
+}
+
+.app[data-slide="on"] .screen--cover,
+.app[data-slide="on"] .screen--centered {
+  min-height: 100%;
+}
+
+.app[data-slide="on"] .screen--cover-side {
+  min-height: 100%;
+}
+
+/* Client 2026-09-15: on phones this screen leads with the media column
+   (the founder's photo) instead of pushing it below the text. */
+@media (max-width: 899.98px) {
+  .screen--split.screen--aside-first-mobile .screen__aside {
+    order: -1;
+  }
+}
+
+/* ---- Light background photo (non-cover screens) --------------------------
+   The photo sits behind the content with a veil so the navy text keeps its
+   contrast (client test on screen 2.1). */
+.screen--bg-light {
+  position: relative;
+  --stage-pad: clamp(var(--sp-5), 4vw, var(--sp-7));
+  --screen-pad: var(--stage-pad);
+  padding: var(--stage-pad);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.screen--bg-light .screen__bg {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+}
+
+.screen--bg-light .screen__bg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
+}
+
+.screen--bg-light::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(180deg, rgb(253 252 251 / 0.93) 0%, rgb(253 252 251 / 0.86) 55%, rgb(253 252 251 / 0.9) 100%);
+}
+
+/* The presenter's portrait, centred above the title. */
+.screen__avatar {
+  margin: 0 0 var(--sp-4);
+}
+
+.screen--centered .screen__avatar {
+  display: flex;
+  justify-content: center;
+}

@@ -1,0 +1,469 @@
+/* =========================================================================
+   CruCo · Knowledge checks (non-graded)
+   Types: single, multiple, truefalse, matching, ordering, fillblank, recall.
+   ========================================================================= */
+
+.quiz {
+  max-width: 860px;
+  padding: clamp(var(--sp-4), 3vw, var(--sp-6));
+  border: 1px solid var(--c-line);
+  border-radius: var(--radius-lg);
+  background: var(--c-surface);
+  box-shadow: var(--shadow-1);
+}
+
+.quiz__head {
+  margin-bottom: var(--sp-5);
+}
+
+.quiz__title {
+  margin-bottom: var(--sp-1);
+  font-size: var(--fs-xl);
+}
+
+.quiz__meta {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--c-ink-muted);
+}
+
+.question + .question {
+  margin-top: var(--sp-6);
+  padding-top: var(--sp-6);
+  border-top: 1px solid var(--c-line);
+}
+
+.question__fieldset {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.question__prompt {
+  display: block;
+  margin-bottom: var(--sp-2);
+  padding: 0;
+  font-family: var(--font-display);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-semibold);
+  line-height: var(--lh-snug);
+}
+
+.question__num {
+  display: block;
+  margin-bottom: var(--sp-1);
+  font-family: var(--font-body);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-accent);
+}
+
+.question__hint {
+  margin: 0 0 var(--sp-4);
+  font-size: var(--fs-sm);
+  color: var(--c-ink-muted);
+}
+
+.question__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--sp-3);
+  margin-top: var(--sp-4);
+}
+
+/* ---- Choice options --------------------------------------------------------- */
+.options {
+  display: grid;
+  gap: var(--sp-2);
+}
+
+.option {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: var(--sp-3);
+  min-height: 52px;
+  padding: var(--sp-3) var(--sp-4);
+  border: 1.5px solid var(--c-line-strong);
+  border-radius: var(--radius-md);
+  background: var(--c-surface);
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease), background-color var(--dur-fast) var(--ease);
+}
+
+.option:hover {
+  border-color: var(--c-accent);
+}
+
+.option input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.option__box {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--c-line-strong);
+  border-radius: var(--radius-pill);
+  background: var(--c-surface);
+}
+
+.option input[type="checkbox"] + .option__box {
+  border-radius: 5px;
+}
+
+.option input:checked + .option__box {
+  border-color: var(--c-accent);
+  background: var(--c-accent);
+  box-shadow: inset 0 0 0 3px var(--c-surface);
+}
+
+.option input[type="checkbox"]:checked + .option__box {
+  box-shadow: none;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E") center / 14px no-repeat,
+    var(--c-accent);
+}
+
+.option input:focus-visible + .option__box {
+  outline: 3px solid var(--c-focus);
+  outline-offset: 3px;
+}
+
+.option:has(input:checked) {
+  border-color: var(--c-accent);
+  background: var(--c-accent-soft);
+}
+
+.option__mark {
+  display: none;
+  width: 22px;
+  height: 22px;
+}
+
+.option[data-result="correct"] {
+  border-color: var(--c-success);
+  background: var(--c-success-soft);
+}
+
+.option[data-result="incorrect"] {
+  border-color: var(--c-error);
+  background: var(--c-error-soft);
+}
+
+.option[data-result] .option__mark {
+  display: block;
+}
+
+.option[data-result="correct"] .option__mark { color: var(--c-success); }
+.option[data-result="incorrect"] .option__mark { color: var(--c-error); }
+
+.question[data-locked="true"] .option {
+  cursor: default;
+}
+
+.question[data-locked="true"] .option:hover {
+  border-color: inherit;
+}
+
+.option__feedback {
+  grid-column: 2 / -1;
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--c-ink-muted);
+}
+
+/* ---- Matching --------------------------------------------------------------- */
+.matching {
+  display: grid;
+  gap: var(--sp-3);
+}
+
+.matching__row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr) auto;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-3) var(--sp-4);
+  border: 1.5px solid var(--c-line);
+  border-radius: var(--radius-md);
+}
+
+.matching__left {
+  font-weight: var(--fw-semibold);
+}
+
+.select {
+  width: 100%;
+  min-height: 44px;
+  padding: var(--sp-2) var(--sp-7) var(--sp-2) var(--sp-3);
+  border: 1.5px solid var(--c-line-strong);
+  border-radius: var(--radius-sm);
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235a5550' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E") right 10px center / 18px no-repeat,
+    var(--c-surface);
+  appearance: none;
+}
+
+.matching__row[data-result="correct"] { border-color: var(--c-success); background: var(--c-success-soft); }
+.matching__row[data-result="incorrect"] { border-color: var(--c-error); background: var(--c-error-soft); }
+
+.matching__mark {
+  width: 22px;
+  height: 22px;
+}
+
+.matching__row:not([data-result]) .matching__mark { visibility: hidden; }
+.matching__row[data-result="correct"] .matching__mark { color: var(--c-success); }
+.matching__row[data-result="incorrect"] .matching__mark { color: var(--c-error); }
+
+@media (max-width: 599.98px) {
+  .matching__row { grid-template-columns: minmax(0, 1fr) auto; }
+  .matching__row .select { grid-column: 1 / -1; grid-row: 2; }
+}
+
+/* ---- Ordering --------------------------------------------------------------- */
+.ordering {
+  display: grid;
+  gap: var(--sp-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ordering__item {
+  display: grid;
+  grid-template-columns: 32px 1fr auto;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: var(--sp-2) var(--sp-2) var(--sp-2) var(--sp-3);
+  border: 1.5px solid var(--c-line-strong);
+  border-radius: var(--radius-md);
+  background: var(--c-surface);
+}
+
+.ordering__pos {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-pill);
+  background: var(--c-surface-alt);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.ordering__moves {
+  display: flex;
+  gap: var(--sp-1);
+}
+
+.ordering__moves .icon-btn {
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--c-line);
+}
+
+.ordering__item[data-result="correct"] { border-color: var(--c-success); background: var(--c-success-soft); }
+.ordering__item[data-result="incorrect"] { border-color: var(--c-error); background: var(--c-error-soft); }
+
+/* ---- Text inputs (fill-in / recall) ---------------------------------------- */
+.text-answer {
+  width: 100%;
+  min-height: 48px;
+  padding: var(--sp-3) var(--sp-4);
+  border: 1.5px solid var(--c-line-strong);
+  border-radius: var(--radius-md);
+  background: var(--c-surface);
+}
+
+textarea.text-answer {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.text-answer:focus-visible {
+  border-color: var(--c-focus);
+  outline-offset: 1px;
+}
+
+.text-answer:disabled {
+  background: var(--c-surface-alt);
+}
+
+/* ---- Feedback ------------------------------------------------------------------ */
+.feedback {
+  margin-top: var(--sp-4);
+  padding: var(--sp-4) var(--sp-5);
+  border-radius: var(--radius-md);
+  border-left: 5px solid;
+  animation: dialog-in var(--dur) var(--ease);
+}
+
+.feedback:focus {
+  outline: none;
+}
+
+.feedback:focus-visible {
+  outline: 3px solid var(--c-focus);
+  outline-offset: 2px;
+}
+
+.feedback__head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-bottom: var(--sp-2);
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+}
+
+.feedback__head svg {
+  width: 22px;
+  height: 22px;
+}
+
+.feedback--correct {
+  border-color: var(--c-success);
+  background: var(--c-success-soft);
+}
+
+.feedback--correct .feedback__head { color: var(--c-success); }
+
+.feedback--incorrect {
+  border-color: var(--c-error);
+  background: var(--c-error-soft);
+}
+
+.feedback--incorrect .feedback__head { color: var(--c-error); }
+
+.feedback--neutral {
+  border-color: var(--c-info);
+  background: var(--c-info-soft);
+}
+
+.feedback--neutral .feedback__head { color: var(--c-info); }
+
+.feedback .prose {
+  font-size: var(--fs-sm);
+}
+
+.feedback .question__actions {
+  margin-top: var(--sp-3);
+}
+
+.quiz__status {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin: var(--sp-5) 0 0;
+  padding-top: var(--sp-4);
+  border-top: 1px solid var(--c-line);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-semibold);
+  color: var(--c-success);
+}
+
+.quiz__status svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Revealed correct option the learner did not choose
+   (storyboard: "on reveal, highlight option B"). */
+.option[data-result="answer"] {
+  border-color: var(--c-success);
+  background: var(--c-success-soft);
+  border-style: dashed;
+}
+
+.option[data-result="answer"] .option__mark {
+  color: var(--c-success);
+}
+
+/* Drag & drop ordering (buttons remain the accessible path). */
+.ordering__item {
+  touch-action: none;
+}
+
+.ordering[data-dragging] .ordering__item {
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.ordering__item[data-dragging="true"] {
+  border-color: var(--c-accent);
+  box-shadow: var(--shadow-2);
+  opacity: 0.92;
+  cursor: grabbing;
+}
+
+.question[data-locked="true"] .ordering__item {
+  cursor: default;
+}
+
+/* ---- cloze: a sentence with dropdown gaps (ML03 screen 6) ------------------
+   The sentence has to read as a sentence, so the gaps sit in the line, sized
+   to their own content, and only colour themselves once the answer is checked. */
+.cloze {
+  margin: 0;
+  font-size: var(--fs-md);
+  line-height: 2.1;                    /* room for the boxes without crowding */
+}
+
+.cloze__gap {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+  vertical-align: baseline;
+}
+
+.cloze__select {
+  max-width: 100%;
+  padding: 2px var(--sp-2);
+  border: 1.5px solid var(--c-line-strong);
+  border-radius: var(--radius-md);
+  background: var(--c-surface);
+  /* client 2026-09-21: smaller than the sentence, so the gaps sit in the line
+     instead of breaking it */
+  font-size: var(--fs-sm);
+  font-family: inherit;
+  color: var(--c-ink-muted);
+}
+
+.cloze__gap[data-filled="true"] .cloze__select {
+  color: var(--c-ink);
+  font-weight: var(--fw-semibold);
+  border-color: var(--c-accent);
+}
+
+.cloze__gap[data-result="correct"] .cloze__select {
+  border-color: var(--c-success);
+  background: var(--c-success-soft);
+}
+
+.cloze__gap[data-result="incorrect"] .cloze__select {
+  border-color: var(--c-error);
+  background: var(--c-error-soft);
+}
+
+.cloze__mark {
+  display: inline-grid;
+  place-items: center;
+}
+
+.cloze__mark svg {
+  width: 20px;
+  height: 20px;
+}
+
+.cloze__gap[data-result="correct"] .cloze__mark { color: var(--c-success); }
+.cloze__gap[data-result="incorrect"] .cloze__mark { color: var(--c-error); }

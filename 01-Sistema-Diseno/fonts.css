@@ -1,0 +1,44 @@
+/* =========================================================================
+   Brand typography — self-hosted (offline requirement: no CDN, no network)
+   -------------------------------------------------------------------------
+   Display: Cormorant Garamond (SIL Open Font License 1.1 — licence text in
+   assets/fonts/cormorant-garamond/OFL.txt). Same substitution crucowine.com
+   uses for the brand face IvyOra Text, which is a commercial licence and
+   cannot be embedded. If CruCo buys a web licence for IvyOra Text + Neue
+   Haas Grotesk, drop the .woff2 files here and swap the families in
+   tokens.css (--font-display / --font-body).
+   Body: system stack ("Helvetica Neue", Helvetica, Arial) — same as the site.
+   Subset: latin (covers Spanish accents, ¿¡, «», – and …).
+   ========================================================================= */
+
+@font-face {
+  font-family: "Cormorant Garamond";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../assets/fonts/cormorant-garamond/cormorant-garamond-500.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Cormorant Garamond";
+  font-style: italic;
+  font-weight: 500;
+  font-display: swap;
+  src: url("../assets/fonts/cormorant-garamond/cormorant-garamond-500-italic.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Cormorant Garamond";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("../assets/fonts/cormorant-garamond/cormorant-garamond-600.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "Cormorant Garamond";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("../assets/fonts/cormorant-garamond/cormorant-garamond-700.woff2") format("woff2");
+}

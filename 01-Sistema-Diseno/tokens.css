@@ -1,0 +1,156 @@
+/* =========================================================================
+   CruCo · Design tokens
+   -------------------------------------------------------------------------
+   Single source of truth for color, type, spacing, radii, elevation and
+   motion.
+   Brand source: CruCo_BrandBook.pdf (Manual de Marca) + crucowine.com
+     Corporate:  azul #1D2E52 (primary) · dorado #E0AC62 · blanco #FDFCFB
+     Secondary:  #853954 · #F3F4F4  (+ site shades: #15233F #0F1A30 #EBC388)
+     Brand type: IvyOra Text + Neue Haas Grotesk Display Pro (COMMERCIAL
+                 licences: not embeddable). Same substitution the website
+                 uses: Cormorant Garamond (OFL, bundled) + Helvetica Neue.
+   Contrast: gold is DECORATIVE only (2.0:1 on white). Text/background pairs
+   used by the UI meet WCAG 2.2 AA (>= 4.5:1); UI borders/indicators >= 3:1.
+   ========================================================================= */
+
+:root {
+  /* ---- Brand ---------------------------------------------------------- */
+  --c-azul: #1d2e52;            /* corporate blue · 12.5:1 on white */
+  --c-azul-oscuro: #15233f;     /* hover / pressed */
+  --c-azul-profundo: #0f1a30;   /* dark surfaces (cover screens) */
+  --c-dorado: #e0ac62;          /* decorative accent only */
+  --c-dorado-suave: #ebc388;
+  --c-vino: #853954;            /* secondary · 7.9:1 on white */
+  --c-blanco: #fdfcfb;
+  --c-blanco-mate: #f3f4f4;
+
+  /* ---- Roles ---------------------------------------------------------- */
+  --c-accent: var(--c-azul);           /* primary interactive */
+  --c-accent-strong: var(--c-azul-oscuro);
+  --c-accent-soft: #edf0f5;            /* tinted backgrounds */
+  --c-accent-ink: var(--c-blanco);     /* text on accent */
+  --c-eyebrow: var(--c-vino);          /* small caps labels */
+
+  /* ---- Neutrals ------------------------------------------------------- */
+  --c-ink: #1b2742;             /* primary text · 13.4:1 on paper */
+  --c-ink-muted: #56617c;       /* secondary text · 6.2:1 on paper */
+  --c-paper: var(--c-blanco-mate);
+  --c-surface: var(--c-blanco);
+  --c-surface-alt: #e9ebef;
+  --c-line: #dcdfe6;            /* hairlines */
+  --c-line-strong: #828ca1;     /* input borders · 3.2:1 vs surface */
+
+  /* ---- Dark surfaces (cover screens, top bar) ------------------------- */
+  --c-dark-bg: var(--c-azul-profundo);
+  --c-dark-ink: var(--c-blanco);
+  --c-dark-ink-muted: #c3cadb;
+  --c-dark-line: rgb(253 252 251 / 0.22);
+
+  /* ---- Semantic ------------------------------------------------------- */
+  --c-focus: var(--c-azul);
+  --c-focus-invert: var(--c-dorado);
+  --c-success: #2e6b3f;
+  --c-success-soft: #e7f1ea;
+  --c-error: #a3302b;
+  --c-error-soft: #f8e7e5;
+  --c-warning: #7a4f00;
+  --c-warning-soft: #fbf0d9;
+  --c-info: var(--c-azul);
+  --c-info-soft: var(--c-accent-soft);
+
+  /* ---- Media placeholders (spec: pink #FFC0CB) ------------------------ */
+  --c-video-ph: #ffc0cb;
+  --c-video-ph-ink: #7a1846;    /* 6.7:1 on #FFC0CB */
+  --c-video-ph-line: #e58aa5;
+  --c-image-ph: #e9ebef;
+  --c-image-ph-ink: #4a5468;
+
+  /* ---- Typography ----------------------------------------------------- */
+  /* Bundled locally (assets/fonts) — no network at runtime.               */
+  --font-display: "Cormorant Garamond", Cormorant, Garamond, "Times New Roman", serif;
+  --font-body: "Helvetica Neue", Helvetica, Arial, "Segoe UI", system-ui, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  /* Client 2026-09-21: every size raised by 4 px. */
+  --fs-xs: 1.0625rem;                              /* 17px */
+  --fs-sm: 1.1875rem;                              /* 19px */
+  --fs-md: 1.3125rem;                              /* 21px · body */
+  --fs-lg: clamp(1.3750rem, 1.3000rem + 0.35vw, 1.5625rem);
+  --fs-xl: clamp(1.6250rem, 1.4500rem + 0.8vw, 2.0000rem);
+  --fs-2xl: clamp(2.1250rem, 1.7500rem + 1.5vw, 3.0000rem);   /* display face runs small */
+  --fs-3xl: clamp(2.5000rem, 1.9000rem + 2.7vw, 4.1250rem);
+
+  --lh-tight: 1.1;
+  --lh-snug: 1.25;
+  --lh-body: 1.6;
+
+  --fw-regular: 400;
+  --fw-medium: 500;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+
+  --ls-label: 0.12em;           /* uppercase micro-labels (brand style) */
+  --measure: 66ch;              /* comfortable line length */
+
+  /* ---- Spacing (4px base) --------------------------------------------- */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --sp-7: 3rem;
+  --sp-8: 4rem;
+
+  /* ---- Shape & elevation ---------------------------------------------- */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
+  --radius-pill: 999px;
+
+  --shadow-1: 0 1px 2px rgb(27 39 66 / 0.06), 0 1px 1px rgb(27 39 66 / 0.04);
+  --shadow-2: 0 6px 18px rgb(27 39 66 / 0.09), 0 2px 4px rgb(27 39 66 / 0.05);
+  --shadow-3: 0 18px 48px rgb(15 26 48 / 0.22), 0 4px 12px rgb(15 26 48 / 0.10);
+
+  /* ---- Player layout -------------------------------------------------- */
+  --topbar-h: 64px;
+  --navbar-h: 68px;
+  --sidebar-w: 340px;
+  --stage-max: 1120px;
+
+  /* ---- Motion --------------------------------------------------------- */
+  --dur-fast: 140ms;
+  --dur: 240ms;
+  --dur-slow: 420ms;
+  --dur-reveal: 900ms;          /* write-on / staged reveals */
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  /* ---- Layers --------------------------------------------------------- */
+  --z-sidebar: 30;
+  --z-topbar: 40;
+  --z-scrim: 55;                /* drawer mode: above the top bar */
+  --z-drawer: 60;
+  --z-modal: 100;
+  --z-toast: 120;
+  --z-editor: 150;
+  --z-debug: 200;
+}
+
+/* Dark context: light text, gold focus ring (gold fails contrast on white). */
+.on-dark {
+  --c-ink: var(--c-dark-ink);
+  --c-ink-muted: var(--c-dark-ink-muted);
+  --c-line: var(--c-dark-line);
+  --c-focus: var(--c-focus-invert);
+  --c-eyebrow: var(--c-dorado);
+  color: var(--c-dark-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-fast: 0ms;
+    --dur: 0ms;
+    --dur-slow: 0ms;
+    --dur-reveal: 0ms;
+  }
+}
