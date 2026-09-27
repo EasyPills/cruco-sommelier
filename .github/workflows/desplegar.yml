@@ -1,0 +1,23 @@
+# Cada vez que se sube un cambio a main, la VM se actualiza sola.
+# Requiere tres secretos en el repo (Settings -> Secrets and variables -> Actions):
+#   VM_HOST     la IP pública de la VM
+#   VM_USER     tu usuario en la VM (el de la sesión SSH)
+#   VM_SSH_KEY  la clave PRIVADA cuya pública está autorizada en la VM
+name: Desplegar en la VM
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:        # también a mano, desde la pestaña Actions
+
+jobs:
+  desplegar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Actualizar el curso en el servidor
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VM_HOST }}
+          username: ${{ secrets.VM_USER }}
+          key: ${{ secrets.VM_SSH_KEY }}
+          script: bash /var/www/cruco/despliegue/actualizar.sh
