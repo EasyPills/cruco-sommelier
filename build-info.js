@@ -5,4 +5,4 @@ CruCo.config.ALLOW_URL_FLAGS = false;
 CruCo.config.DEBUG = false;
 CruCo.config.EDITOR = false;
 CruCo.config.OVERRIDES = "";
-CruCo.buildInfo = {"standard": "1.2", "contentVersion": "1.0.0", "editor": false, "builtAt": "2026-09-27T18:45:50"};
+CruCo.buildInfo = {"standard": "1.2", "contentVersion": "1.0.0", "editor": false, "builtAt": "2026-09-28T15:49:32"};
